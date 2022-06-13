@@ -4,3 +4,5 @@
 # Ignore environments
 **env/
 venv/
+
+**__pycache__/

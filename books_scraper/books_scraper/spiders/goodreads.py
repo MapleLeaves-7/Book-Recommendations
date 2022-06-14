@@ -7,27 +7,29 @@ class GoodreadsSpider(scrapy.Spider):
     start_urls = [
         "https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
 
+    def __init__(self):
+        self.is_beta = False
+
     def parse(self, response):
         beta_button = response.xpath('//div[@class="BetaFeedbackButton"]')
         if beta_button:
-            is_beta = True
+            self.is_beta = True
             print("Accessing the beta website")
         else:
             print("Accessing the regular website")
-            is_beta = False
 
         yield {
-            "title": self.get_title(response, is_beta),
-            "author": self.get_author(response, is_beta),
-            "description": self.get_description(response, is_beta),
-            "num_pages": self.get_num_pages(response, is_beta),
-            "num_ratings": self.get_num_ratings(response, is_beta),
-            "rating_value": self.get_rating_value(response, is_beta),
-            "genres": self.get_genres(response, is_beta)
+            "title": self.get_title(response),
+            "author": self.get_author(response),
+            "description": self.get_description(response),
+            "num_pages": self.get_num_pages(response),
+            "num_ratings": self.get_num_ratings(response),
+            "rating_value": self.get_rating_value(response),
+            "genres": self.get_genres(response)
         }
 
-    def get_title(self, response, is_beta):
-        if is_beta:
+    def get_title(self, response):
+        if self.is_beta:
             # New website format
             title = response.xpath(
                 '//h1[@class="Text Text__title1"]/text()').get()
@@ -36,16 +38,16 @@ class GoodreadsSpider(scrapy.Spider):
             title = response.xpath('//h1[@id="bookTitle"]/text()').get()
         return title.strip()
 
-    def get_author(self, response, is_beta):
-        if is_beta:
+    def get_author(self, response):
+        if self.is_beta:
             # New website format
             return response.xpath('//span[@class="ContributorLink__name"]/text()').get()
         else:
             # Old website format
             return response.xpath('//a[@class="authorName"]/span/text()').get()
 
-    def get_description(self, response, is_beta):
-        if is_beta:
+    def get_description(self, response):
+        if self.is_beta:
             # New website format
             description = response.xpath(
                 '//div[@class="BookPageMetadataSection__description"]//span[@class="Formatted"]/text()').get()
@@ -58,8 +60,8 @@ class GoodreadsSpider(scrapy.Spider):
             "An alternative cover edition for this ISBN can be found here.", "")
         return description.strip()
 
-    def get_num_pages(self, response, is_beta):
-        if is_beta:
+    def get_num_pages(self, response):
+        if self.is_beta:
             num_pages_text = response.xpath(
                 '//p[@data-testid="pagesFormat"]/text()').get()
         else:
@@ -67,8 +69,8 @@ class GoodreadsSpider(scrapy.Spider):
                 '//span[@itemprop="numberOfPages"]/text()').get()
         return self.extract_integer(num_pages_text)
 
-    def get_num_ratings(self, response, is_beta):
-        if is_beta:
+    def get_num_ratings(self, response):
+        if self.is_beta:
             num_ratings_text = response.xpath(
                 '//span[@data-testid="ratingsCount"][1]/text()').get()
         else:
@@ -76,8 +78,8 @@ class GoodreadsSpider(scrapy.Spider):
                 '//a[@href="#other_reviews"][1]/meta/@content').get()
         return self.extract_integer(num_ratings_text)
 
-    def get_rating_value(self, response, is_beta):
-        if is_beta:
+    def get_rating_value(self, response):
+        if self.is_beta:
             rating_value = response.xpath(
                 '//div[@class="RatingStatistics__rating"][1]/text()').get()
         else:
@@ -85,8 +87,8 @@ class GoodreadsSpider(scrapy.Spider):
                 '//span[@itemprop="ratingValue"]/text()').get()
         return rating_value.strip()
 
-    def get_genres(self, response, is_beta):
-        if is_beta:
+    def get_genres(self, response):
+        if self.is_beta:
             print("haven't handled the beta yet")
         else:
             genre_anchor_tags = response.xpath(

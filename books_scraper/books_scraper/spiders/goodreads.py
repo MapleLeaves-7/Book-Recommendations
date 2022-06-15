@@ -16,7 +16,6 @@ class GoodreadsSpider(scrapy.Spider):
 
     def __init__(self):
         self.base_url = "https://www.goodreads.com"
-        self.is_beta = False
 
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
@@ -92,79 +91,44 @@ class GoodreadsSpider(scrapy.Spider):
             sel = scrapy.Selector(text=self.driver.page_source)
 
     def get_title(self, response):
-        if self.is_beta:
-            # New website format
-            title = response.xpath(
-                '//h1[@class="Text Text__title1"]/text()').get()
-        else:
-            # Old website format
-            title = response.xpath('//h1[@id="bookTitle"]/text()').get()
+        title = response.xpath('//h1[@id="bookTitle"]/text()').get()
         return title.strip()
 
     def get_author(self, response):
-        if self.is_beta:
-            # New website format
-            return response.xpath('//span[@class="ContributorLink__name"]/text()').get()
-        else:
-            # Old website format
-            return response.xpath('//a[@class="authorName"]/span/text()').get()
+        author = response.xpath('//a[@class="authorName"]/span/text()').get()
+        return author.strip()
 
     def get_description(self, response):
-        if self.is_beta:
-            # New website format
-            description = response.xpath(
-                '//div[@class="BookPageMetadataSection__description"]//span[@class="Formatted"]/text()').get()
-        else:
-            # Old website format
-            description = response.xpath(
-                '//div[@id="description"]/span[2]/text()').get()
+        description = response.xpath(
+            '//div[@id="description"]/span[2]/text()').get()
 
         description = description.replace(
             "An alternative cover edition for this ISBN can be found here.", "")
         return description.strip()
 
     def get_num_pages(self, response):
-        if self.is_beta:
-            num_pages_text = response.xpath(
-                '//p[@data-testid="pagesFormat"]/text()').get()
-        else:
-            num_pages_text = response.xpath(
-                '//span[@itemprop="numberOfPages"]/text()').get()
+        num_pages_text = response.xpath(
+            '//span[@itemprop="numberOfPages"]/text()').get()
         return self.extract_integer(num_pages_text)
 
     def get_num_ratings(self, response):
-        if self.is_beta:
-            num_ratings_text = response.xpath(
-                '//span[@data-testid="ratingsCount"][1]/text()').get()
-        else:
-            num_ratings_text = response.xpath(
-                '//a[@href="#other_reviews"][1]/meta/@content').get()
+        num_ratings_text = response.xpath(
+            '//a[@href="#other_reviews"][1]/meta/@content').get()
         return self.extract_integer(num_ratings_text)
 
     def get_rating_value(self, response):
-        if self.is_beta:
-            rating_value = response.xpath(
-                '//div[@class="RatingStatistics__rating"][1]/text()').get()
-        else:
-            rating_value = response.xpath(
-                '//span[@itemprop="ratingValue"]/text()').get()
+        rating_value = response.xpath(
+            '//span[@itemprop="ratingValue"]/text()').get()
         return rating_value.strip()
 
     def get_genres(self, response):
-        if self.is_beta:
-            genre_sections = response.xpath(
-                '//span[@class="BookPageMetadataSection__genre"]')
-            print(genre_sections)
-            genres = "nothing"
-            print("haven't handled the beta yet")
-        else:
-            genre_anchor_tags = response.xpath(
-                '//a[contains(@href, "/work/shelves/")]/../../following-sibling::div//div[contains(@class, "elementList ")]/div[@class="left"]//a')
-            genres = {}
-            for tag in genre_anchor_tags:
-                link = tag.xpath('@href').get()
-                name = tag.xpath('text()').get()
-                genres[self.base_url + link] = name.lower()
+        genre_anchor_tags = response.xpath(
+            '//a[contains(@href, "/work/shelves/")]/../../following-sibling::div//div[contains(@class, "elementList ")]/div[@class="left"]//a')
+        genres = {}
+        for tag in genre_anchor_tags:
+            link = tag.xpath('@href').get()
+            name = tag.xpath('text()').get()
+            genres[self.base_url + link] = name.lower()
 
         return genres
 

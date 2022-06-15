@@ -28,12 +28,13 @@ class GoodreadsSpider(scrapy.Spider):
 
     def parse(self, response):
         self.has_all_data = True
-        # Let selenium load the page then pass html to scrapy
+        # Load page using selenium
         self.driver.get(response.request.url)
-        sel = scrapy.Selector(text=self.driver.page_source)
+        # Set page selector to be the html of the page loaded into selenium
+        page_sel = scrapy.Selector(text=self.driver.page_source)
 
         # Check if it is the beta website
-        beta_button = sel.xpath(
+        beta_button = page_sel.xpath(
             '//div[@class="BetaFeedbackButton"]')
 
         if beta_button:
@@ -69,22 +70,22 @@ class GoodreadsSpider(scrapy.Spider):
             time.sleep(0.6)
 
             # Set the newly loaded old page as the selector element
-            sel = scrapy.Selector(text=self.driver.page_source)
+            page_sel = scrapy.Selector(text=self.driver.page_source)
 
         # Reload page until login modal is gone for old page
-        sel = self.remove_old_modal(sel, response.request.url)
+        page_sel = self.remove_old_modal(page_sel, response.request.url)
 
         try:
             yield {
                 "has_all_data": self.has_all_data,
-                "title": self.get_title(sel),
-                "author": self.get_author(sel),
-                "description": self.get_description(sel),
-                "num_pages": self.get_num_pages(sel),
-                "num_ratings": self.get_num_ratings(sel),
-                "rating_value": self.get_rating_value(sel),
-                "genres": self.get_genres(sel, response.request.url),
-                "settings": self.get_settings(sel, response.request.url)
+                "title": self.get_title(page_sel),
+                "author": self.get_author(page_sel),
+                "description": self.get_description(page_sel),
+                "num_pages": self.get_num_pages(page_sel),
+                "num_ratings": self.get_num_ratings(page_sel),
+                "rating_value": self.get_rating_value(page_sel),
+                "genres": self.get_genres(page_sel, response.request.url),
+                "settings": self.get_settings(page_sel, response.request.url)
             }
         except:
             yield {
@@ -99,56 +100,56 @@ class GoodreadsSpider(scrapy.Spider):
             }
 
     # Check if modal window exists and reload until it is gone
-    def remove_old_modal(self, sel, url):
+    def remove_old_modal(self, page_sel, url):
         while True:
-            old_modal_window = sel.xpath(
+            old_modal_window = page_sel.xpath(
                 '//*[contains(@class,"loginModal")]')
 
             if not old_modal_window:
-                return sel
+                return page_sel
 
             self.driver.get(url)
             time.sleep(1)
-            sel = scrapy.Selector(text=self.driver.page_source)
+            page_sel = scrapy.Selector(text=self.driver.page_source)
 
-    def get_title(self, response):
-        title = response.xpath('//h1[@id="bookTitle"]/text()').get()
+    def get_title(self, page_sel):
+        title = page_sel.xpath('//h1[@id="bookTitle"]/text()').get()
         return title.strip()
 
-    def get_author(self, response):
-        author = response.xpath('//a[@class="authorName"]/span/text()').get()
+    def get_author(self, page_sel):
+        author = page_sel.xpath('//a[@class="authorName"]/span/text()').get()
         return author.strip()
 
-    def get_description(self, response):
-        description = response.xpath(
+    def get_description(self, page_sel):
+        description = page_sel.xpath(
             '//div[@id="description"]/span[2]/text()').get()
 
         description = description.replace(
             "An alternative cover edition for this ISBN can be found here.", "")
         return description.strip()
 
-    def get_num_pages(self, response):
-        num_pages_text = response.xpath(
+    def get_num_pages(self, page_sel):
+        num_pages_text = page_sel.xpath(
             '//span[@itemprop="numberOfPages"]/text()').get()
         return self.extract_integer(num_pages_text)
 
-    def get_num_ratings(self, response):
-        num_ratings_text = response.xpath(
+    def get_num_ratings(self, page_sel):
+        num_ratings_text = page_sel.xpath(
             '//a[@href="#other_reviews"][1]/meta/@content').get()
         return self.extract_integer(num_ratings_text)
 
-    def get_rating_value(self, response):
-        rating_value = response.xpath(
+    def get_rating_value(self, page_sel):
+        rating_value = page_sel.xpath(
             '//span[@itemprop="ratingValue"]/text()').get()
         return rating_value.strip()
 
-    def get_genres(self, response, url):
-        genre_anchor_tags = response.xpath(
+    def get_genres(self, page_sel, url):
+        genre_anchor_tags = page_sel.xpath(
             '//a[contains(@href, "/work/shelves/")]/../../following-sibling::div//div[contains(@class, "elementList ")]/div[@class="left"]//a')
         return self.extract_link_and_name(genre_anchor_tags, url)
 
-    def get_settings(self, response, url):
-        setting_anchor_tags = response.xpath('//a[contains(@href,"/places")]')
+    def get_settings(self, page_sel, url):
+        setting_anchor_tags = page_sel.xpath('//a[contains(@href,"/places")]')
         return self.extract_link_and_name(setting_anchor_tags, url)
 
     def extract_link_and_name(self, anchor_tags, url):

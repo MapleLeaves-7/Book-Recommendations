@@ -85,7 +85,8 @@ class GoodreadsSpider(scrapy.Spider):
                 "num_ratings": self.get_num_ratings(page_sel),
                 "rating_value": self.get_rating_value(page_sel),
                 "genres": self.get_genres(page_sel, response.request.url),
-                "settings": self.get_settings(page_sel, response.request.url)
+                "settings": self.get_settings(page_sel, response.request.url),
+                "date_published": self.get_date_published(page_sel)
             }
         except:
             yield {
@@ -151,6 +152,28 @@ class GoodreadsSpider(scrapy.Spider):
     def get_settings(self, page_sel, url):
         setting_anchor_tags = page_sel.xpath('//a[contains(@href,"/places")]')
         return self.extract_link_and_name(setting_anchor_tags, url)
+
+    def get_date_published(self, page_sel):
+        date_published = page_sel.xpath(
+            '//div[contains(text(), "Published")]/text()').get()
+
+        # Remove multiple spaces and newlines
+        date_published = " ".join(date_published.split())
+
+        date_regex = re.compile(
+            '(?P<month>\w+)\s(?P<day>\d{1,2})(?:st|nd|rd|th)\s(?P<year>\d{4})')
+        match = date_regex.search(date_published)
+
+        try:
+            return {
+                "day": match.group('day'),
+                "month": match.group('month').lower(),
+                "year": match.group('year')
+            }
+        except AttributeError:
+            # Did not find a match for the date
+            self.has_all_data = False
+            return None
 
     def extract_link_and_name(self, anchor_tags, url):
         link_and_name = {}

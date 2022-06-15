@@ -1,6 +1,7 @@
 import scrapy
 import re
 import time
+from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -63,10 +64,11 @@ class GoodreadsSpider(scrapy.Spider):
             # Wait until the old page has loaded or 30 seconds have passed
             WebDriverWait(self.driver, 30).until(
                 EC.presence_of_element_located(
-                    (By.CLASS_NAME, "content"))
+                    (By.XPATH, '//h1[@id="bookTitle"]'))
             )
             time.sleep(0.6)
 
+        # Reload page until login modal is gone for old page
         sel = self.remove_old_modal(sel, response.request.url)
 
         try:
@@ -78,7 +80,8 @@ class GoodreadsSpider(scrapy.Spider):
                 "num_pages": self.get_num_pages(sel),
                 "num_ratings": self.get_num_ratings(sel),
                 "rating_value": self.get_rating_value(sel),
-                "genres": self.get_genres(sel)
+                "genres": self.get_genres(sel, response.request.url),
+                "settings": self.get_settings(sel, response.request.url)
             }
         except:
             yield {
@@ -136,16 +139,23 @@ class GoodreadsSpider(scrapy.Spider):
             '//span[@itemprop="ratingValue"]/text()').get()
         return rating_value.strip()
 
-    def get_genres(self, response):
+    def get_genres(self, response, url):
         genre_anchor_tags = response.xpath(
             '//a[contains(@href, "/work/shelves/")]/../../following-sibling::div//div[contains(@class, "elementList ")]/div[@class="left"]//a')
-        genres = {}
-        for tag in genre_anchor_tags:
+        return self.extract_link_and_name(genre_anchor_tags, url)
+
+    def get_settings(self, response, url):
+        setting_anchor_tags = response.xpath('//a[contains(@href,"/places")]')
+        return self.extract_link_and_name(setting_anchor_tags, url)
+
+    def extract_link_and_name(self, anchor_tags, url):
+        link_and_name = {}
+        for tag in anchor_tags:
             link = tag.xpath('@href').get()
             name = tag.xpath('text()').get()
-            genres[self.base_url + link] = name.lower()
+            link_and_name[urljoin(url, link)] = name.lower()
 
-        return genres
+        return link_and_name
 
     def extract_integer(self, text):
         # Regex to extract number

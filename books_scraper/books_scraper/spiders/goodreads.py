@@ -16,6 +16,7 @@ class GoodreadsSpider(scrapy.Spider):
 
     def __init__(self):
         self.base_url = "https://www.goodreads.com"
+        self.has_all_data = True
 
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
@@ -25,6 +26,7 @@ class GoodreadsSpider(scrapy.Spider):
             service=Service(ChromeDriverManager().install()), options=options)
 
     def parse(self, response):
+        self.has_all_data = True
         # Let selenium load the page then pass html to scrapy
         self.driver.get(response.request.url)
         sel = scrapy.Selector(text=self.driver.page_source)
@@ -67,15 +69,28 @@ class GoodreadsSpider(scrapy.Spider):
 
         sel = self.remove_old_modal(sel, response.request.url)
 
-        yield {
-            "title": self.get_title(sel),
-            "author": self.get_author(sel),
-            "description": self.get_description(sel),
-            "num_pages": self.get_num_pages(sel),
-            "num_ratings": self.get_num_ratings(sel),
-            "rating_value": self.get_rating_value(sel),
-            "genres": self.get_genres(sel)
-        }
+        try:
+            yield {
+                "has_all_data": self.has_all_data,
+                "title": self.get_title(sel),
+                "author": self.get_author(sel),
+                "description": self.get_description(sel),
+                "num_pages": self.get_num_pages(sel),
+                "num_ratings": self.get_num_ratings(sel),
+                "rating_value": self.get_rating_value(sel),
+                "genres": self.get_genres(sel)
+            }
+        except:
+            yield {
+                "has_all_data": False,
+                "title": None,
+                "author": None,
+                "description": None,
+                "num_pages": None,
+                "num_ratings": None,
+                "rating_value": None,
+                "genres": None
+            }
 
     # Check if modal window exists and reload until it is gone
     def remove_old_modal(self, sel, url):
@@ -139,6 +154,7 @@ class GoodreadsSpider(scrapy.Spider):
         if not number_text:
             print(text)
             print("Number extraction failed")
+            self.has_all_data = False
             return None
         number_text = number_text.group()
         number = number_text.replace(",", "")

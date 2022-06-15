@@ -12,8 +12,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class GoodreadsSpider(scrapy.Spider):
     name = "goodreads"
-    start_urls = [
-        "https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
 
     def __init__(self):
         self.base_url = "https://www.goodreads.com"
@@ -26,7 +24,18 @@ class GoodreadsSpider(scrapy.Spider):
         self.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options)
 
-    def parse(self, response):
+    def start_requests(self):
+        start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
+
+        for url in start_urls:
+            yield scrapy.Request(url=url, callback=self.parse_shelves)
+
+    def parse_shelves(self, response):
+        book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()
+        for link in book_links:
+            yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+
+    def parse_book_metadata(self, response):
         self.has_all_data = True
         # Load page using selenium
         self.driver.get(response.request.url)

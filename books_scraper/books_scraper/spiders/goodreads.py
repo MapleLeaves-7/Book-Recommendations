@@ -1,6 +1,7 @@
 import scrapy
 import re
 import time
+import datetime
 from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -150,8 +151,8 @@ class GoodreadsSpider(scrapy.Spider):
 
     def get_rating_value(self, page_sel):
         rating_value = page_sel.xpath(
-            '//span[@itemprop="ratingValue"]/text()').get()
-        return rating_value.strip()
+            '//span[@itemprop="ratingValue"]/text()').get().strip()
+        return float(rating_value)
 
     def get_genres(self, page_sel, url):
         genre_anchor_tags = page_sel.xpath(
@@ -174,11 +175,17 @@ class GoodreadsSpider(scrapy.Spider):
         match = date_regex.search(date_published)
 
         try:
-            return {
-                "day": match.group('day'),
-                "month": match.group('month').lower(),
-                "year": match.group('year')
-            }
+            day = match.group('day')
+            month = match.group('month').capitalize()
+            year = match.group('year')
+            formatted_date = f"{day} {month} {year}"
+
+            datetime_object = datetime.datetime.strptime(
+                formatted_date, "%d %B %Y")
+
+            date_object = datetime_object.date()
+
+            return date_object.isoformat()
         except AttributeError:
             # Did not find a match for the date
             self.has_all_data = False

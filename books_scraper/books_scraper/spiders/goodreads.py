@@ -68,6 +68,9 @@ class GoodreadsSpider(scrapy.Spider):
             )
             time.sleep(0.6)
 
+            # Set the newly loaded old page as the selector element
+            sel = scrapy.Selector(text=self.driver.page_source)
+
         # Reload page until login modal is gone for old page
         sel = self.remove_old_modal(sel, response.request.url)
 

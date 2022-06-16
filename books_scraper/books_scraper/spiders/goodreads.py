@@ -26,15 +26,23 @@ class GoodreadsSpider(scrapy.Spider):
             service=Service(ChromeDriverManager().install()), options=options)
 
     def start_requests(self):
-        start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
+        # start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
+        start_urls = ["https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
 
         for url in start_urls:
-            yield scrapy.Request(url=url, callback=self.parse_shelves)
+            # yield scrapy.Request(url=url, callback=self.parse_shelves)
+            yield scrapy.Request(url=url, callback=self.parse_book_metadata)
 
-    def parse_shelves(self, response):
-        book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()
-        for link in book_links:
-            yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+    # def parse_shelves(self, response):
+    #     book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()
+    #     # for link in book_links:
+    #     #     yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+    #     i = 0
+    #     for link in book_links:
+    #         if i > 2:
+    #             break
+    #         yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+    #         i += 1
 
     def parse_book_metadata(self, response):
         self.has_all_data = True

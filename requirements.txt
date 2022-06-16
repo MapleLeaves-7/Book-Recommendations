@@ -9,6 +9,7 @@ constantly==15.1.0
 cryptography==37.0.2
 cssselect==1.1.0
 filelock==3.7.1
+greenlet==1.1.2
 h11==0.13.0
 hyperlink==21.0.0
 idna==3.3
@@ -38,6 +39,8 @@ service-identity==21.1.0
 six==1.16.0
 sniffio==1.2.0
 sortedcontainers==2.4.0
+SQLAlchemy==1.4.37
+SQLAlchemy-Utils==0.38.2
 tldextract==3.3.0
 toml==0.10.2
 trio==0.21.0

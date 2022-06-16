@@ -89,6 +89,7 @@ class GoodreadsSpider(scrapy.Spider):
         loader = ItemLoader(item=BookMetadataItem(), selector=page_sel)
         try:
             loader.add_value('has_all_data', self.has_all_data)
+            loader.add_value('link', response.request.url)
             loader.add_xpath('title', '//h1[@id="bookTitle"]/text()')
             loader.add_xpath('author', '//a[@class="authorName"]/span/text()')
             loader.add_xpath('description', '//div[@id="description"]/span[2]/text()')
@@ -103,6 +104,7 @@ class GoodreadsSpider(scrapy.Spider):
             yield metadata_item 
         except:
             loader.add_value('has_all_data', False)
+            loader.add_value('link', response.request.url)
             loader.add_value('title', None)
             loader.add_value('author', None)
             loader.add_value('description', None)

@@ -1,7 +1,5 @@
 import scrapy
-import re
 import time
-import datetime
 from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -9,6 +7,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from scrapy.loader import ItemLoader
+from books_scraper.items import BookMetadataItem
 
 
 class GoodreadsSpider(scrapy.Spider):
@@ -85,30 +85,36 @@ class GoodreadsSpider(scrapy.Spider):
         # Reload page until login modal is gone for old page
         page_sel = self.remove_old_modal(page_sel, response.request.url)
 
+
+        loader = ItemLoader(item=BookMetadataItem(), selector=page_sel)
         try:
-            yield {
-                "has_all_data": self.has_all_data,
-                "title": self.get_title(page_sel),
-                "author": self.get_author(page_sel),
-                "description": self.get_description(page_sel),
-                "num_pages": self.get_num_pages(page_sel),
-                "num_ratings": self.get_num_ratings(page_sel),
-                "rating_value": self.get_rating_value(page_sel),
-                "genres": self.get_genres(page_sel, response.request.url),
-                "settings": self.get_settings(page_sel, response.request.url),
-                "date_published": self.get_date_published(page_sel)
-            }
+            loader.add_value('has_all_data', self.has_all_data)
+            loader.add_xpath('title', '//h1[@id="bookTitle"]/text()')
+            loader.add_xpath('author', '//a[@class="authorName"]/span/text()')
+            loader.add_xpath('description', '//div[@id="description"]/span[2]/text()')
+            loader.add_xpath('num_pages', '//span[@itemprop="numberOfPages"]/text()')
+            loader.add_xpath('num_ratings', '//a[@href="#other_reviews"][1]/meta/@content')
+            loader.add_xpath('rating_value', '//span[@itemprop="ratingValue"]/text()')
+            loader.add_value('genres', self.get_genres(page_sel, response.request.url))
+            loader.add_value('settings', self.get_settings(page_sel, response.request.url))
+            loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
+
+            metadata_item = loader.load_item()
+            yield metadata_item 
         except:
-            yield {
-                "has_all_data": False,
-                "title": None,
-                "author": None,
-                "description": None,
-                "num_pages": None,
-                "num_ratings": None,
-                "rating_value": None,
-                "genres": None
-            }
+            loader.add_value('has_all_data', False)
+            loader.add_value('title', None)
+            loader.add_value('author', None)
+            loader.add_value('description', None)
+            loader.add_value('num_pages', None)
+            loader.add_value('num_ratings', None)
+            loader.add_value('rating_value', None)
+            loader.add_value('genres', None)
+            loader.add_value('settings', None)
+            loader.add_value('date_published', None)
+            
+            metadata_item = loader.load_item()
+            yield metadata_item
 
     # Check if modal window exists and reload until it is gone
     def remove_old_modal(self, page_sel, url):
@@ -123,37 +129,6 @@ class GoodreadsSpider(scrapy.Spider):
             time.sleep(1)
             page_sel = scrapy.Selector(text=self.driver.page_source)
 
-    def get_title(self, page_sel):
-        title = page_sel.xpath('//h1[@id="bookTitle"]/text()').get()
-        return title.strip()
-
-    def get_author(self, page_sel):
-        author = page_sel.xpath('//a[@class="authorName"]/span/text()').get()
-        return author.strip()
-
-    def get_description(self, page_sel):
-        description = page_sel.xpath(
-            '//div[@id="description"]/span[2]/text()').get()
-
-        description = description.replace(
-            "An alternative cover edition for this ISBN can be found here.", "")
-        return description.strip()
-
-    def get_num_pages(self, page_sel):
-        num_pages_text = page_sel.xpath(
-            '//span[@itemprop="numberOfPages"]/text()').get()
-        return self.extract_integer(num_pages_text)
-
-    def get_num_ratings(self, page_sel):
-        num_ratings_text = page_sel.xpath(
-            '//a[@href="#other_reviews"][1]/meta/@content').get()
-        return self.extract_integer(num_ratings_text)
-
-    def get_rating_value(self, page_sel):
-        rating_value = page_sel.xpath(
-            '//span[@itemprop="ratingValue"]/text()').get().strip()
-        return float(rating_value)
-
     def get_genres(self, page_sel, url):
         genre_anchor_tags = page_sel.xpath(
             '//a[contains(@href, "/work/shelves/")]/../../following-sibling::div//div[contains(@class, "elementList ")]/div[@class="left"]//a')
@@ -163,34 +138,6 @@ class GoodreadsSpider(scrapy.Spider):
         setting_anchor_tags = page_sel.xpath('//a[contains(@href,"/places")]')
         return self.extract_link_and_name(setting_anchor_tags, url)
 
-    def get_date_published(self, page_sel):
-        date_published = page_sel.xpath(
-            '//div[contains(text(), "Published")]/text()').get()
-
-        # Remove multiple spaces and newlines
-        date_published = " ".join(date_published.split())
-
-        date_regex = re.compile(
-            '(?P<month>\w+)\s(?P<day>\d{1,2})(?:st|nd|rd|th)\s(?P<year>\d{4})')
-        match = date_regex.search(date_published)
-
-        try:
-            day = match.group('day')
-            month = match.group('month').capitalize()
-            year = match.group('year')
-            formatted_date = f"{day} {month} {year}"
-
-            datetime_object = datetime.datetime.strptime(
-                formatted_date, "%d %B %Y")
-
-            date_object = datetime_object.date()
-
-            return date_object.isoformat()
-        except AttributeError:
-            # Did not find a match for the date
-            self.has_all_data = False
-            return None
-
     def extract_link_and_name(self, anchor_tags, url):
         link_and_name = {}
         for tag in anchor_tags:
@@ -199,16 +146,3 @@ class GoodreadsSpider(scrapy.Spider):
             link_and_name[urljoin(url, link)] = name.lower()
 
         return link_and_name
-
-    def extract_integer(self, text):
-        # Regex to extract number
-        regex = re.compile("(?:(?:\d+),)*\d+")
-        number_text = regex.search(text)
-        if not number_text:
-            print(text)
-            print("Number extraction failed")
-            self.has_all_data = False
-            return None
-        number_text = number_text.group()
-        number = number_text.replace(",", "")
-        return int(number)

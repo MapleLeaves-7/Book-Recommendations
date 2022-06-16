@@ -1,12 +1,64 @@
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
+import re
+import datetime
+from scrapy.item import Item, Field
+from scrapy.loader.processors import MapCompose, TakeFirst, Join
 
-import scrapy
+# Remove mutiple spaces and newlines
+def remove_extra_spaces(text):
+    return " ".join(text.split())
 
+def clean_description(text):
+    return text.replace(
+            "An alternative cover edition for this ISBN can be found here.", "")
 
-class BooksScraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+def extract_integer(text):
+    # Regex to extract number
+    regex = re.compile("(?:(?:\d+),)*\d+")
+    match = regex.search(text)
+    if not match:
+        return None
+    number_text = match.group()
+    number = number_text.replace(",", "")
+    return int(number)
+
+def extract_float(text):
+    # Regex to extract float
+    regex = re.compile("^[0-5](?:\.\d{1,2})?")
+    match = regex.search(text)
+    if not match:
+        return None
+    return float(match.group())
+
+def extract_date(date_published):
+    date_regex = re.compile(
+            '(?P<month>\w+)\s(?P<day>\d{1,2})(?:st|nd|rd|th)\s(?P<year>\d{4})')
+    match = date_regex.search(date_published)
+
+    try:
+        day = match.group('day')
+        month = match.group('month').capitalize()
+        year = match.group('year')
+        formatted_date = f"{day} {month} {year}"
+
+        datetime_object = datetime.datetime.strptime(
+            formatted_date, "%d %B %Y")
+
+        date_object = datetime_object.date()
+
+        return date_object.isoformat()
+    except AttributeError:
+        # Did not find a match for the date
+        return None
+
+class BookMetadataItem(Item):
+    has_all_data = Field(output_processor=TakeFirst())
+    title = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())
+    author = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())
+    description = Field(input_processor=MapCompose(clean_description, remove_extra_spaces), output_processor=Join())
+    num_pages = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
+    num_ratings = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
+    rating_value = Field(input_processor=MapCompose(remove_extra_spaces, extract_float), output_processor=TakeFirst())
+    genres = Field()
+    settings = Field()
+    date_published = Field(input_processor=MapCompose(remove_extra_spaces, extract_date), output_processor=TakeFirst())
+

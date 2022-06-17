@@ -58,7 +58,7 @@ class BookMetadataItem(Item):
     num_pages = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
     num_ratings = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
     rating_value = Field(input_processor=MapCompose(remove_extra_spaces, extract_float), output_processor=TakeFirst())
-    genres = Field()
-    settings = Field()
+    genres = Field(output_processor=TakeFirst())
+    settings = Field(output_processor=TakeFirst())
     date_published = Field(input_processor=MapCompose(remove_extra_spaces, extract_date), output_processor=TakeFirst())
 

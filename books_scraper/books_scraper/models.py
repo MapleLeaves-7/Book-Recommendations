@@ -40,38 +40,55 @@ book_genre = Table('book_genre',
 
 # Association table for many to many relationship between books and story settings
 # https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#many-to-many
-book_storysetting = Table('book_storysetting',
-                   Base.metadata,
-                   Column('book_id', Integer, ForeignKey('books.id')),
-                   Column('story_settings', Integer, ForeignKey('story_settings.id')))
+book_story_setting = Table('book_story_setting',
+                           Base.metadata,
+                           Column('book_id', Integer, ForeignKey('books.id')),
+                           Column('story_settings', Integer, ForeignKey('story_settings.id')))
+
 
 class Book(Base):
     __tablename__ = 'books'
 
-    id=Column(Integer, primary_key=True)
-    link=Column(String, nullable=False, unique=True)
-    has_all_data=Column(Boolean, nullable=False)
-    title=Column(String(100))
-    author=Column(String(50))
-    book_description=Column(String(50))
-    num_pages=Column(Integer)
-    num_ratings=Column(Integer)
-    rating_value=Column(Float(5))
-    date_published=Column(Date)
+    id = Column(Integer, primary_key=True)
+    link = Column(String, nullable=False, unique=True)
+    has_all_data = Column(Boolean, nullable=False)
+    title = Column(String(150), nullable=False)
+    author = Column(String(50), nullable=False)
+    description = Column(String, nullable=False)
+    num_pages = Column(Integer, nullable=False)
+    num_ratings = Column(Integer, nullable=False)
+    rating_value = Column(Float(5), nullable=False)
+    date_published = Column(Date, nullable=False)
+    # M-to-M relationship between books and genres
+    genres = relationship('Genre', secondary='book_genre', backref='Book')
+    # M-to-M relationship between books and story settings
+    settings = relationship(
+        'StorySetting', secondary='book_story_setting', backref='Book')
 
 
 class Genre(Base):
     __tablename__ = "genres"
 
-    id=Column(Integer, primary_key=True)
-    name=Column(String(50))
-    link=Column(String, nullable=False, unique=True)
+    id = Column(Integer, primary_key=True)
+    link = Column(String, nullable=False, unique=True)
+    name = Column(String(50))
+    # # M-to-M relationship between books and genres
+    # books = relationship('Book', secondary='book_genre', backref='Genre')
 
 
 class StorySetting(Base):
     __tablename__ = "story_settings"
 
-    id=Column(Integer, primary_key=True)
-    name=Column(String(50))
-    link=Column(String, nullable=False, unique=True)
-    
+    id = Column(Integer, primary_key=True)
+    link = Column(String, nullable=False, unique=True)
+    name = Column(String(50))
+    # # M-to-M relationship between books and story settings
+    # books = relationship(
+    #     'Book', secondary='book_story_setting', backref='StorySetting')
+
+
+class UnsavedBookLink(Base):
+    __tablename__ = "unsaved_book_links"
+
+    id = Column(Integer, primary_key=True)
+    link = Column(String, nullable=False, unique=True)

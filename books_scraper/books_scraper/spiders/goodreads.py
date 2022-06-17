@@ -155,4 +155,7 @@ class GoodreadsSpider(scrapy.Spider):
             name = tag.xpath('text()').get()
             link_and_name[urljoin(url, link)] = name.lower()
 
+        # if there was no data extracted, return None
+        if not link_and_name:
+            return None
         return link_and_name

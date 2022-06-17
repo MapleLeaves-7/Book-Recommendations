@@ -3,13 +3,16 @@ import datetime
 from scrapy.item import Item, Field
 from scrapy.loader.processors import MapCompose, TakeFirst, Join
 
+
 # Remove mutiple spaces and newlines
 def remove_extra_spaces(text):
     return " ".join(text.split())
 
+
 def clean_description(text):
     return text.replace(
-            "An alternative cover edition for this ISBN can be found here.", "")
+        "An alternative cover edition for this ISBN can be found here.", "")
+
 
 def extract_integer(text):
     # Regex to extract number
@@ -21,6 +24,7 @@ def extract_integer(text):
     number = number_text.replace(",", "")
     return int(number)
 
+
 def extract_float(text):
     # Regex to extract float
     regex = re.compile("^[0-5](?:\.\d{1,2})?")
@@ -29,9 +33,10 @@ def extract_float(text):
         return None
     return float(match.group())
 
+
 def extract_date(date_published):
     date_regex = re.compile(
-            '(?P<month>\w+)\s(?P<day>\d{1,2})(?:st|nd|rd|th)\s(?P<year>\d{4})')
+        '(?P<month>\w+)\s(?P<day>\d{1,2})(?:st|nd|rd|th)\s(?P<year>\d{4})')
     match = date_regex.search(date_published)
 
     try:
@@ -49,6 +54,7 @@ def extract_date(date_published):
         # Did not find a match for the date
         return None
 
+
 class BookMetadataItem(Item):
     has_all_data = Field(output_processor=TakeFirst())
     link = Field(output_processor=TakeFirst())
@@ -61,4 +67,3 @@ class BookMetadataItem(Item):
     genres = Field(output_processor=TakeFirst())
     settings = Field(output_processor=TakeFirst())
     date_published = Field(input_processor=MapCompose(remove_extra_spaces, extract_date), output_processor=TakeFirst())
-

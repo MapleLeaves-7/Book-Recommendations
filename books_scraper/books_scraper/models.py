@@ -1,25 +1,34 @@
-from sqlalchemy import ForeignKeyConstraint, create_engine, Column, Table, ForeignKey
+from sqlalchemy import create_engine, Column, Table, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
     Integer, String, Date, Float, Boolean
 )
 from sqlalchemy_utils import database_exists, create_database
-from datetime import datetime
-from database_settings import postgresql as settings
+from books_scraper.database_settings import postgresql as db_settings
 
 Base = declarative_base()
 
 
-def get_engine(user, password, host, port, db):
+def get_engine():
+    user = db_settings["user"]
+    password = db_settings["password"]
+    host = db_settings["host"]
+    port = db_settings["port"]
+    db = db_settings["db"]
+
     url = f"postgresql://{user}:{password}@{host}:{port}/{db}"
     if not database_exists(url):
         create_database(url)
     return create_engine(url)
 
 
-def create_table(engine):
+def create_all_tables(engine):
     Base.metadata.create_all(engine)
+
+
+def drop_all_tables(engine):
+    Base.metadata.drop_all(engine)
 
 
 # Association table for many to many relationship between books and genres

@@ -4,7 +4,7 @@ import logging
 try:
     postgresql = {
         "user": os.getenv("USERNAME"),
-        "hostname": os.getenv("HOSTNAME"),
+        "host": os.getenv("HOSTNAME"),
         "password": os.getenv("PASSWORD"),
         "port": os.getenv("PORT"),
         "db": "books"

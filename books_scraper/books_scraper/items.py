@@ -44,8 +44,7 @@ def extract_date(date_published):
             formatted_date, "%d %B %Y")
 
         date_object = datetime_object.date()
-
-        return date_object.isoformat()
+        return date_object
     except AttributeError:
         # Did not find a match for the date
         return None

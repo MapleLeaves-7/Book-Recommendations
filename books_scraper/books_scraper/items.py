@@ -1,7 +1,7 @@
 import re
 import datetime
 from scrapy.item import Item, Field
-from scrapy.loader.processors import MapCompose, TakeFirst, Join
+from itemloaders.processors import MapCompose, TakeFirst, Join
 
 
 # Remove mutiple spaces and newlines

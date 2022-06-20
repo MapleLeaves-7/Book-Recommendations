@@ -74,8 +74,6 @@ class Genre(Base):
     id = Column(Integer, primary_key=True)
     link = Column(String, nullable=False, unique=True)
     name = Column(String(50))
-    # # M-to-M relationship between books and genres
-    # books = relationship('Book', secondary='book_genre', backref='Genre')
 
 
 class StorySetting(Base):
@@ -84,6 +82,3 @@ class StorySetting(Base):
     id = Column(Integer, primary_key=True)
     link = Column(String, nullable=False, unique=True)
     name = Column(String(50))
-    # # M-to-M relationship between books and story settings
-    # books = relationship(
-    #     'Book', secondary='book_story_setting', backref='StorySetting')

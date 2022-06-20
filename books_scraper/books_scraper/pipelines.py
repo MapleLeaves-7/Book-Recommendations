@@ -1,7 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from books_scraper.models import Book, Genre, StorySetting, UnsavedBookLink, get_engine, create_all_tables, drop_all_tables
 from sqlalchemy.exc import IntegrityError
-from psycopg2.errors import NotNullViolation
+# from psycopg2.errors import NotNullViolation
 
 
 class SaveBookPipeline:
@@ -22,18 +22,17 @@ class SaveBookPipeline:
 
         book = Book()
 
-        book.has_all_data = False
-        book.link = item["link"]
-        book.title = item["title"]
-        book.author = item["author"]
-        book.description = item["description"]
-        book.num_pages = item["num_pages"]
-        book.num_ratings = item["num_ratings"]
-        book.rating_value = item["rating_value"]
-        book.date_published = item["date_published"]
+        has_all_data = True
+        all_attributes = ["link", "title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
+        # check if attributes are None, if not, sets the attributes
+        for attribute in all_attributes:
+            # if attribute is None, it would not be attatched to item
+            if attribute not in item or not item[attribute]:
+                has_all_data = False
+                continue
+            setattr(book, attribute, item[attribute])
 
         # check that data for genres was extracted
-        print(item["genres"])
         if item["genres"] is not None:
             for link, name in item["genres"].items():
                 genre = Genre(link=link, name=name)
@@ -44,6 +43,8 @@ class SaveBookPipeline:
                     genre = exist_genre
 
                 book.genres.append(genre)
+        else:
+            has_all_data = False
 
         # check that data for story setting was extracted
         if item["settings"] is not None:
@@ -56,13 +57,18 @@ class SaveBookPipeline:
                     genre = exist_story_setting
 
                 book.settings.append(story_setting)
+        else:
+            has_all_data = False
 
+        book.has_all_data = has_all_data
+        
         try:
             # note: don’t need to add genre and story_setting explicitly due to the relationships specified in ORM (book.genres and book.settings
             # the new genre/story_setting (if any) will be created and inserted automatically by SQLAlchemy via the save-update cascade
             print("am going to try to add book to database")
             session.add(book)
             session.commit()
+            print("i managed to save the book!!")
         except IntegrityError as e:
             # will have exception if any of the properties of book are NULL
             print(e)

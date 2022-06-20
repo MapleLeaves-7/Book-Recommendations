@@ -16,7 +16,6 @@ class GoodreadsSpider(scrapy.Spider):
 
     def __init__(self):
         self.base_url = "https://www.goodreads.com"
-        self.has_all_data = True
 
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
@@ -45,7 +44,6 @@ class GoodreadsSpider(scrapy.Spider):
     #         i += 1
 
     def parse_book_metadata(self, response):
-        self.has_all_data = True
         # Load page using selenium
         self.driver.get(response.request.url)
         # Set page selector to be the html of the page loaded into selenium
@@ -93,10 +91,9 @@ class GoodreadsSpider(scrapy.Spider):
         # Reload page until login modal is gone for old page
         page_sel = self.remove_old_modal(page_sel, response.request.url)
 
-
         loader = ItemLoader(item=BookMetadataItem(), selector=page_sel)
+
         try:
-            loader.add_value('has_all_data', self.has_all_data)
             loader.add_value('link', response.request.url)
             loader.add_xpath('title', '//h1[@id="bookTitle"]/text()')
             loader.add_xpath('author', '//a[@class="authorName"]/span/text()')
@@ -112,7 +109,6 @@ class GoodreadsSpider(scrapy.Spider):
             metadata_item = loader.load_item()
             yield metadata_item 
         except:
-            loader.add_value('has_all_data', False)
             loader.add_value('link', response.request.url)
             loader.add_value('title', None)
             loader.add_value('author', None)

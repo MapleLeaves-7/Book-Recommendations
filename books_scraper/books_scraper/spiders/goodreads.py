@@ -107,6 +107,7 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
             loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
+            loader.add_xpath('related_books', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
 
             metadata_item = loader.load_item()
             yield metadata_item 

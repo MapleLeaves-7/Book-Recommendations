@@ -87,10 +87,3 @@ class StorySetting(Base):
     # # M-to-M relationship between books and story settings
     # books = relationship(
     #     'Book', secondary='book_story_setting', backref='StorySetting')
-
-
-class UnsavedBookLink(Base):
-    __tablename__ = "unsaved_book_links"
-
-    id = Column(Integer, primary_key=True)
-    link = Column(String, nullable=False, unique=True)

@@ -110,15 +110,9 @@ class GoodreadsSpider(scrapy.Spider):
             yield metadata_item 
         except:
             loader.add_value('link', response.request.url)
-            loader.add_value('title', None)
-            loader.add_value('author', None)
-            loader.add_value('description', None)
-            loader.add_value('num_pages', None)
-            loader.add_value('num_ratings', None)
-            loader.add_value('rating_value', None)
-            loader.add_value('genres', None)
-            loader.add_value('settings', None)
-            loader.add_value('date_published', None)
+            attributes = ["title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published", "genres", "date_published", "related_books"]
+            for attribute in attributes:
+                loader.add_value(attribute, None)
             
             metadata_item = loader.load_item()
             yield metadata_item

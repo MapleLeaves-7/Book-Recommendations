@@ -1,8 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from books_scraper.models import Book, Genre, StorySetting, UnsavedBookLink, get_engine, create_all_tables, drop_all_tables
-from sqlalchemy.exc import IntegrityError
-# from psycopg2.errors import NotNullViolation
-
+from books_scraper.models import Book, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables
 
 class SaveBookPipeline:
     def __init__(self):
@@ -69,28 +66,7 @@ class SaveBookPipeline:
             session.add(book)
             session.commit()
             print("i managed to save the book!!")
-        except IntegrityError as e:
-            # will have exception if any of the properties of book are NULL
-            print(e)
-            # assert isinstance(e.orig, NotNullViolation)
-            session.rollback()
-
-            # check to see if this unsaved link is already in database
-            exist_unsaved_book_link = session.query(
-                UnsavedBookLink).filter_by(link=book.link).first()
-
-            # if the unsaved link isn't in database yet, save it into the database
-            if not exist_unsaved_book_link:
-                unsaved_book_link = UnsavedBookLink()
-                unsaved_book_link.link = book.link
-                try:
-                    session.add(unsaved_book_link)
-                    session.commit()
-                except Exception as e:
-                    print(e)
-                    session.rollback()
         except Exception as e:
-            # handle other types of exceptions
             print(e)
             session.rollback()
         finally:

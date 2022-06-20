@@ -35,6 +35,7 @@ def drop_all_tables(engine):
 # https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#many-to-many
 book_genre = Table('book_genre',
                    Base.metadata,
+                   Column('id', Integer, primary_key=True),
                    Column('book_id', Integer, ForeignKey('books.id')),
                    Column('genre_id', Integer, ForeignKey('genres.id')))
 
@@ -42,6 +43,7 @@ book_genre = Table('book_genre',
 # https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#many-to-many
 book_story_setting = Table('book_story_setting',
                            Base.metadata,
+                           Column('id', Integer, primary_key=True),
                            Column('book_id', Integer, ForeignKey('books.id')),
                            Column('story_settings', Integer, ForeignKey('story_settings.id')))
 

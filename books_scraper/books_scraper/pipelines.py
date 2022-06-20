@@ -23,9 +23,9 @@ class SaveBookPipeline:
         book = Book()
 
         has_all_data = True
-        all_attributes = ["link", "title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
+        attributes = ["link", "title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
         # check if attributes are None, if not, sets the attributes
-        for attribute in all_attributes:
+        for attribute in attributes:
             # if attribute is None, it would not be attatched to item
             if attribute not in item or not item[attribute]:
                 has_all_data = False

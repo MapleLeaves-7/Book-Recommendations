@@ -56,7 +56,6 @@ def extract_date(date_published):
 
 
 class BookMetadataItem(Item):
-    has_all_data = Field(output_processor=TakeFirst())
     link = Field(output_processor=TakeFirst())
     title = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())
     author = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())

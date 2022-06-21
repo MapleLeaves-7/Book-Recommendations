@@ -21,7 +21,9 @@ class SaveBookPipeline:
         book = Book()
 
         has_all_data = True
-        attributes = ["link", "title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
+        attributes = ["link", "title", "author", "description",
+                      "num_pages", "num_ratings", "rating_value", "date_published"]
+
         # check if attributes are None, if not, sets the attributes
         for attribute in attributes:
             # if attribute is None, it would not be attatched to item
@@ -34,8 +36,7 @@ class SaveBookPipeline:
             for link, name in item["genres"].items():
                 genre = Genre(link=link, name=name)
                 # check whether current genre already exists in database
-                exist_genre = session.query(
-                    Genre).filter_by(link=genre.link).first()
+                exist_genre = session.query(Genre).filter_by(link=genre.link).first()
                 if exist_genre:
                     genre = exist_genre
 
@@ -47,8 +48,7 @@ class SaveBookPipeline:
             for link, name in item["settings"].items():
                 story_setting = StorySetting(link=link, name=name)
                 # check whether current genre already exists in database
-                exist_story_setting = session.query(
-                    StorySetting).filter_by(link=story_setting.link).first()
+                exist_story_setting = session.query(StorySetting).filter_by(link=story_setting.link).first()
                 if exist_story_setting:
                     genre = exist_story_setting
 

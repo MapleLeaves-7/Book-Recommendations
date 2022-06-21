@@ -90,8 +90,9 @@ class GoodreadsSpider(scrapy.Spider):
 
         # Reload page until login modal is gone for old page
         page_sel = self.remove_old_modal(page_sel, response.request.url)
-
         loader = ItemLoader(item=BookMetadataItem(), selector=page_sel)
+
+        related_book_links = self.get_related_book_links(page_sel)
 
         try:
             loader.add_value('link', response.request.url)
@@ -104,18 +105,26 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
             loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
-            loader.add_xpath('related_books', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
+            # loader.add_xpath('related_books', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
+            loader.add_value('related_books', related_book_links)
 
             metadata_item = loader.load_item()
             yield metadata_item
         except:
             loader.add_value('link', response.request.url)
-            attributes = ["title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published", "genres", "date_published", "related_books"]
+            attributes = ["title", "author", "description", "num_pages", "num_ratings",
+                          "rating_value", "date_published", "genres", "date_published", "related_books"]
             for attribute in attributes:
                 loader.add_value(attribute, None)
 
             metadata_item = loader.load_item()
             yield metadata_item
+
+        print(related_book_links)
+        for link in related_book_links:
+            if link:
+                time.sleep(3)
+                yield response.follow(response.urljoin(link), callback=self.parse_book_metadata)
 
     # Check if modal window exists and reload until it is gone
     def remove_old_modal(self, page_sel, url):
@@ -138,6 +147,9 @@ class GoodreadsSpider(scrapy.Spider):
     def get_settings(self, page_sel, url):
         setting_anchor_tags = page_sel.xpath('//a[contains(@href,"/places")]')
         return self.extract_link_and_name(setting_anchor_tags, url)
+
+    def get_related_book_links(self, page_sel):
+        return page_sel.xpath('//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href').extract()
 
     def extract_link_and_name(self, anchor_tags, url):
         link_and_name = {}

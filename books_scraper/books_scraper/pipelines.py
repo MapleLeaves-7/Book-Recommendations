@@ -30,7 +30,7 @@ class SaveBookPipeline:
                 continue
             setattr(book, attribute, item[attribute])
 
-        if item["genres"] is not None:  # check that data for genres was extracted
+        if "genres" in item:  # check that data for genres was extracted
             for link, name in item["genres"].items():
                 genre = Genre(link=link, name=name)
                 # check whether current genre already exists in database
@@ -43,7 +43,7 @@ class SaveBookPipeline:
         else:
             has_all_data = False
 
-        if item["settings"] is not None:  # check that data for story setting was extracted
+        if "settings" in item:  # check that data for story setting was extracted
             for link, name in item["settings"].items():
                 story_setting = StorySetting(link=link, name=name)
                 # check whether current genre already exists in database

@@ -107,13 +107,13 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_xpath('related_books', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
 
             metadata_item = loader.load_item()
-            yield metadata_item 
+            yield metadata_item
         except:
             loader.add_value('link', response.request.url)
             attributes = ["title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published", "genres", "date_published", "related_books"]
             for attribute in attributes:
                 loader.add_value(attribute, None)
-            
+
             metadata_item = loader.load_item()
             yield metadata_item
 

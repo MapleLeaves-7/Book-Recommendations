@@ -15,18 +15,30 @@ class SaveBookPipeline:
         self.Session = sessionmaker(bind=engine)
 
     def process_item(self, item, spider):
+        # don't save book into database if it does not have link
+        if "link" not in item:
+            return item
+
         # create new session
         session = self.Session()
 
-        book = Book()
+        book = Book(link=item["link"])
+
+        # check if book was previously saved in database
+        exist_book = session.query(Book).filter_by(link=book.link).first()
+        if exist_book:
+            if exist_book.has_all_data:
+                # don't need to save new info if the book exists and already has all data
+                return item
+
+            book = exist_book
 
         has_all_data = True
-        attributes = ["link", "title", "author", "description",
-                      "num_pages", "num_ratings", "rating_value", "date_published"]
+        attributes = ["title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
 
         # check if attributes are None, if not, sets the attributes
         for attribute in attributes:
-            # if attribute is None, it would not be attatched to item
+            # if attribute is None, it would not be attached to item
             if attribute not in item or not item[attribute]:
                 has_all_data = False
                 continue

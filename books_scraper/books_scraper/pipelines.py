@@ -56,6 +56,35 @@ class SaveBookPipeline:
         else:
             has_all_data = False
 
+        if "related_books" in item:
+            for link in item["related_books"]:
+                related_book = session.query(Book).filter_by(link=link).first()
+
+                # save related book into database table if it doesn't exist yet
+                if not related_book:
+                    new_related_book = Book()
+                    new_related_book.has_all_data = False
+                    new_related_book.link = link
+
+                    try:
+                        # save related book into table
+                        session.add(new_related_book)
+                        session.commit()
+                    except Exception as e:
+                        print(e)
+                        session.rollback()
+                        # continue to the next link if current link fails
+                        continue
+                    else:
+                        # get related book that was just saved into database
+                        related_book = session.query(Book).filter_by(link=link).first()
+
+                # check that related book exists before appending it to current book
+                if related_book:
+                    book.related_books.append(related_book)
+        else:
+            has_all_data = False
+
         book.has_all_data = has_all_data
 
         try:

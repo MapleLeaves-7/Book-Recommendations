@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Table, ForeignKey
+from sqlalchemy import UniqueConstraint, create_engine, Column, Table, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
@@ -40,12 +40,20 @@ book_genre = Table('book_genre',
                    Column('genre_id', Integer, ForeignKey('genres.id')))
 
 # Association table for many to many relationship between books and story settings
-# https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#many-to-many
 book_story_setting = Table('book_story_setting',
                            Base.metadata,
                            Column('id', Integer, primary_key=True),
                            Column('book_id', Integer, ForeignKey('books.id')),
                            Column('story_settings', Integer, ForeignKey('story_settings.id')))
+
+# Association table for many to many relationship between books and related books
+book_related_book = Table('book_related_book',
+                          Base.metadata,
+                          Column('id', Integer, primary_key=True),
+                          Column('book_id', Integer, ForeignKey('books.id')),
+                          Column('related_book_id', Integer, ForeignKey('books.id')),
+                          UniqueConstraint('book_id', 'related_book_id', name='unique_related_books')
+                          )
 
 
 class Book(Base):
@@ -66,6 +74,10 @@ class Book(Base):
     # M-to-M relationship between books and story settings
     settings = relationship(
         'StorySetting', secondary='book_story_setting', backref='Book')
+    # M-to-M relationship between books and related books (this is a self-referential relationship)
+    related_books = relationship('Book', secondary=book_related_book,
+                                 primaryjoin=id == book_related_book.c.book_id,
+                                 secondaryjoin=id == book_related_book.c.related_book_id)
 
 
 class Genre(Base):

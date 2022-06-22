@@ -105,15 +105,15 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
             loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
-            # loader.add_xpath('related_books', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
-            loader.add_value('related_books', related_book_links)
+            # loader.add_xpath('related_book_links', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
+            loader.add_value('related_book_links', related_book_links)
 
             metadata_item = loader.load_item()
             yield metadata_item
         except:
             loader.add_value('link', response.request.url)
             attributes = ["title", "author", "description", "num_pages", "num_ratings",
-                          "rating_value", "date_published", "genres", "date_published", "related_books"]
+                          "rating_value", "date_published", "genres", "date_published", "related_book_links"]
             for attribute in attributes:
                 loader.add_value(attribute, None)
 
@@ -123,7 +123,7 @@ class GoodreadsSpider(scrapy.Spider):
         print(related_book_links)
         for link in related_book_links:
             if link:
-                time.sleep(3)
+                time.sleep(2)
                 yield response.follow(response.urljoin(link), callback=self.parse_book_metadata)
 
     # Check if modal window exists and reload until it is gone

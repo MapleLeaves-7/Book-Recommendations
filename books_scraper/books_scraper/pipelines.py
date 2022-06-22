@@ -68,8 +68,8 @@ class SaveBookPipeline:
         else:
             has_all_data = False
 
-        if "related_books" in item:
-            for link in item["related_books"]:
+        if "related_book_links" in item:
+            for link in item["related_book_links"]:
                 related_book = session.query(Book).filter_by(link=link).first()
 
                 # save related book into database table if it doesn't exist yet

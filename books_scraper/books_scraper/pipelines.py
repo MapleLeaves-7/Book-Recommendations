@@ -32,6 +32,8 @@ class SaveBookPipeline:
                 return item
 
             book = exist_book
+            # set it to true initially
+            book.has_all_data = True
 
         attributes = ["title", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
 

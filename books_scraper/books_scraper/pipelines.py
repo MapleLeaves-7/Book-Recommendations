@@ -118,10 +118,8 @@ class SaveBookPipeline:
         try:
             # note: don’t need to add genre and story_setting explicitly due to the relationships specified in ORM (book.genres and book.settings
             # the new genre/story_setting (if any) will be created and inserted automatically by SQLAlchemy via the save-update cascade
-            print("am going to try to add book to database")
             session.add(book)
             session.commit()
-            print("i managed to save the book!!")
         except Exception as e:
             print(e)
             session.rollback()

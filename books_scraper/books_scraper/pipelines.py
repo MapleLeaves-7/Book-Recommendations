@@ -10,7 +10,7 @@ class SaveBookPipeline:
         Creates new tables
         """
         engine = get_engine()
-        drop_all_tables(engine)
+        # drop_all_tables(engine)
         create_all_tables(engine)
         self.Session = sessionmaker(bind=engine)
 

@@ -22,7 +22,7 @@ class SaveBookPipeline:
         # create new session
         session = self.Session()
 
-        book = Book(link=item["link"])
+        book = Book(link=item["link"], has_all_data=True)
 
         # check if book was previously saved in database
         exist_book = session.query(Book).filter_by(link=book.link).first()
@@ -33,16 +33,18 @@ class SaveBookPipeline:
 
             book = exist_book
 
-        has_all_data = True
         attributes = ["title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
 
         # check if attributes are None, if not, sets the attributes
         for attribute in attributes:
             # if attribute is None, it would not be attached to item
             if attribute not in item or not item[attribute]:
-                has_all_data = False
+                book.has_all_data = False
                 continue
             setattr(book, attribute, item[attribute])
+
+        for attribute in ["has_genre", "has_setting", "has_related_books"]:
+            setattr(book, attribute, True)
 
         if "genres" in item:  # check that data for genres was extracted
             for link, name in item["genres"].items():
@@ -54,7 +56,8 @@ class SaveBookPipeline:
 
                 book.genres.append(genre)
         else:
-            has_all_data = False
+            book.has_all_data = False
+            book.has_genre = False
 
         if "settings" in item:  # check that data for story setting was extracted
             for link, name in item["settings"].items():
@@ -66,7 +69,8 @@ class SaveBookPipeline:
 
                 book.settings.append(story_setting)
         else:
-            has_all_data = False
+            book.has_all_data = False
+            book.has_setting = False
 
         if "related_book_links" in item:
             for link in item["related_book_links"]:
@@ -74,9 +78,7 @@ class SaveBookPipeline:
 
                 # save related book into database table if it doesn't exist yet
                 if not related_book:
-                    new_related_book = Book()
-                    new_related_book.has_all_data = False
-                    new_related_book.link = link
+                    new_related_book = Book(link=link, has_all_data=False)
 
                     try:
                         # save related book into table
@@ -95,9 +97,8 @@ class SaveBookPipeline:
                 if related_book:
                     book.related_books.append(related_book)
         else:
-            has_all_data = False
-
-        book.has_all_data = has_all_data
+            book.has_all_data = False
+            book.has_related_books = False
 
         try:
             # note: don’t need to add genre and story_setting explicitly due to the relationships specified in ORM (book.genres and book.settings

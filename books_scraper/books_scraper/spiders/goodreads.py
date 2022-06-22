@@ -1,5 +1,6 @@
 import scrapy
 import time
+import re
 from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -20,28 +21,42 @@ class GoodreadsSpider(scrapy.Spider):
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--incognito')
-        # options.add_argument('--headless')
+        options.add_argument('--headless')
         self.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options)
 
     def start_requests(self):
         # start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
-        start_urls = ["https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
+        # start_urls = ["https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
+        start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once"]
 
         for url in start_urls:
-            # yield scrapy.Request(url=url, callback=self.parse_shelves)
-            yield scrapy.Request(url=url, callback=self.parse_book_metadata)
+            yield scrapy.Request(url=url, callback=self.parse_list)
+            # yield scrapy.Request(url=url, callback=self.parse_book_metadata)
 
-    # def parse_shelves(self, response):
-    #     book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()
-    #     # for link in book_links:
-    #     #     yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
-    #     i = 0
-    #     for link in book_links:
-    #         if i > 2:
-    #             break
-    #         yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
-    #         i += 1
+    def parse_list(self, response):
+        book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()
+        for link in book_links:
+            time.sleep(2)
+            yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+        # i = 0
+        # for link in book_links:
+        #     if i > 2:
+        #         break
+        #     yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+        #     i += 1
+
+        next_page_disabled = response.xpath('//span[@class="next_page disabled"]')
+        if not next_page_disabled:
+            page_number_regex = re.compile('\?page=(\d{1,3})')
+            match = page_number_regex.search(response.url)
+            if match:
+                next_page = int(match.group(1)) + 1
+                next_page_url = re.sub(r"\?page=\d{1,3}", f"?page={next_page}", response.url)
+            else:
+                next_page_url = response.url + "?page=2"
+
+            yield response.follow(url=next_page_url, callback=self.parse_list)
 
     def parse_book_metadata(self, response):
         # Load page using selenium

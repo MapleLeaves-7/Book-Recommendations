@@ -65,7 +65,7 @@ class SaveBookPipeline:
                 # check whether current genre already exists in database
                 exist_story_setting = session.query(StorySetting).filter_by(link=story_setting.link).first()
                 if exist_story_setting:
-                    genre = exist_story_setting
+                    story_setting = exist_story_setting
 
                 book.settings.append(story_setting)
         else:

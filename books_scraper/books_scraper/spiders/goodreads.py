@@ -65,8 +65,7 @@ class GoodreadsSpider(scrapy.Spider):
         page_sel = scrapy.Selector(text=self.driver.page_source)
 
         # Check if it is the beta website
-        beta_button = page_sel.xpath(
-            '//div[@class="BetaFeedbackButton"]')
+        beta_button = page_sel.xpath('//div[@class="BetaFeedbackButton"]')
 
         if beta_button:
             # Click out of the beta website

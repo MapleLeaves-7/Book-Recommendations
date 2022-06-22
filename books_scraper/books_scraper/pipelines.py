@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from books_scraper.models import Book, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables
+from books_scraper.models import Book, Author, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables
 
 
 class SaveBookPipeline:
@@ -33,7 +33,7 @@ class SaveBookPipeline:
 
             book = exist_book
 
-        attributes = ["title", "author", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
+        attributes = ["title", "description", "num_pages", "num_ratings", "rating_value", "date_published"]
 
         # check if attributes are None, if not, sets the attributes
         for attribute in attributes:
@@ -43,8 +43,21 @@ class SaveBookPipeline:
                 continue
             setattr(book, attribute, item[attribute])
 
-        for attribute in ["has_genre", "has_setting", "has_related_books"]:
+        for attribute in ["has_author", "has_genre", "has_setting", "has_related_books"]:
             setattr(book, attribute, True)
+
+        if "authors" in item:  # check that data for genres was extracted
+            for link, name in item["authors"].items():
+                author = Author(link=link, name=name)
+                # check whether current author already exists in database
+                exist_author = session.query(Author).filter_by(link=author.link).first()
+                if exist_author:
+                    author = exist_author
+
+                book.authors.append(author)
+        else:
+            book.has_all_data = False
+            book.has_author = False
 
         if "genres" in item:  # check that data for genres was extracted
             for link, name in item["genres"].items():

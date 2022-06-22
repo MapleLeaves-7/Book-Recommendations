@@ -66,4 +66,4 @@ class BookMetadataItem(Item):
     genres = Field(output_processor=TakeFirst())
     settings = Field(output_processor=TakeFirst())
     date_published = Field(input_processor=MapCompose(remove_extra_spaces, extract_date), output_processor=TakeFirst())
-    related_books = Field()
+    related_book_links = Field()

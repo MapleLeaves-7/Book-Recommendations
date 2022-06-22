@@ -10,8 +10,7 @@ def remove_extra_spaces(text):
 
 
 def clean_description(text):
-    return text.replace(
-        "An alternative cover edition for this ISBN can be found here.", "")
+    return text.replace("An alternative cover edition for this ISBN can be found here.", "")
 
 
 def extract_integer(text):
@@ -58,7 +57,7 @@ def extract_date(date_published):
 class BookMetadataItem(Item):
     link = Field(output_processor=TakeFirst())
     title = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())
-    author = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())
+    authors = Field(output_processor=TakeFirst())
     description = Field(input_processor=MapCompose(clean_description, remove_extra_spaces), output_processor=Join())
     num_pages = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
     num_ratings = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())

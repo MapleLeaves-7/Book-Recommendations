@@ -137,11 +137,11 @@ class GoodreadsSpider(scrapy.Spider):
             metadata_item = loader.load_item()
             yield metadata_item
 
-        print(related_book_links)
-        for link in related_book_links:
-            if link:
-                time.sleep(2)
-                yield response.follow(response.urljoin(link), callback=self.parse_book_metadata)
+        # print(related_book_links)
+        # for link in related_book_links:
+        #     if link:
+        #         time.sleep(2)
+        #         yield response.follow(response.urljoin(link), callback=self.parse_book_metadata)
 
     # Check if modal window exists and reload until it is gone
     def remove_old_modal(self, page_sel, url):

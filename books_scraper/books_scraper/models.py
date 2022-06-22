@@ -31,8 +31,15 @@ def drop_all_tables(engine):
     Base.metadata.drop_all(engine)
 
 
-# Association table for many to many relationship between books and genres
+# Association table for many to many relationship between books and authors
 # https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#many-to-many
+book_author = Table('book_author',
+                    Base.metadata,
+                    Column('id', Integer, primary_key=True),
+                    Column('book_id', Integer, ForeignKey('books.id')),
+                    Column('author_id', Integer, ForeignKey('authors.id')))
+
+# Association table for many to many relationship between books and genres
 book_genre = Table('book_genre',
                    Base.metadata,
                    Column('id', Integer, primary_key=True),
@@ -61,12 +68,15 @@ class Book(Base):
 
     id = Column(Integer, primary_key=True)
     link = Column(String, nullable=False, unique=True)
+    # note: has_all_data is false if any of the fields are null, including author, genre, setting and related books
     has_all_data = Column(Boolean, nullable=False)
+    has_author = Column(Boolean)
     has_genre = Column(Boolean)
     has_setting = Column(Boolean)
     has_related_books = Column(Boolean)
     title = Column(String(150))
-    author = Column(String(50))
+    # M-to-M relationship between books and authors
+    authors = relationship('Author', secondary='book_author', backref='Book')
     description = Column(String)
     num_pages = Column(Integer)
     num_ratings = Column(Integer)
@@ -81,6 +91,14 @@ class Book(Base):
     related_books = relationship('Book', secondary=book_related_book,
                                  primaryjoin=id == book_related_book.c.book_id,
                                  secondaryjoin=id == book_related_book.c.related_book_id)
+
+
+class Author(Base):
+    __tablename__ = "authors"
+
+    id = Column(Integer, primary_key=True)
+    link = Column(String, nullable=False, unique=True)
+    name = Column(String(50))
 
 
 class Genre(Base):

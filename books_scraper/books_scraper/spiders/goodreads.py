@@ -28,7 +28,9 @@ class GoodreadsSpider(scrapy.Spider):
     def start_requests(self):
         # start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
         # start_urls = ["https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
-        start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once"]
+        # start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once"]
+        start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=6"]
+        # start_urls = ["https://www.goodreads.com/book/show/264196.1984"]
 
         for url in start_urls:
             yield scrapy.Request(url=url, callback=self.parse_list)

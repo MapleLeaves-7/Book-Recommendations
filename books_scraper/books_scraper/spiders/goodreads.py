@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from scrapy.loader import ItemLoader
-from books_scraper.items import BookMetadataItem
+from books_scraper.items import BookMetadataItem, remove_extra_spaces
 
 
 class GoodreadsSpider(scrapy.Spider):
@@ -112,7 +112,7 @@ class GoodreadsSpider(scrapy.Spider):
         try:
             loader.add_value('link', response.request.url)
             loader.add_xpath('title', '//h1[@id="bookTitle"]/text()')
-            loader.add_xpath('author', '//a[@class="authorName"]/span/text()')
+            loader.add_value('authors', self.get_authors(page_sel, response.request.url))
             loader.add_xpath('description', '//div[@id="description"]/span[2]/text()')
             loader.add_xpath('num_pages', '//span[@itemprop="numberOfPages"]/text()')
             loader.add_xpath('num_ratings', '//a[@href="#other_reviews"][1]/meta/@content')
@@ -125,9 +125,10 @@ class GoodreadsSpider(scrapy.Spider):
 
             metadata_item = loader.load_item()
             yield metadata_item
-        except:
+        except Exception as e:
+            print(e)
             loader.add_value('link', response.request.url)
-            attributes = ["title", "author", "description", "num_pages", "num_ratings",
+            attributes = ["title", "authors", "description", "num_pages", "num_ratings",
                           "rating_value", "date_published", "genres", "date_published", "related_book_links"]
             for attribute in attributes:
                 loader.add_value(attribute, None)
@@ -154,6 +155,10 @@ class GoodreadsSpider(scrapy.Spider):
             time.sleep(1)
             page_sel = scrapy.Selector(text=self.driver.page_source)
 
+    def get_authors(self, page_sel, url):
+        author_anchor_tags = page_sel.xpath('//a[@class="authorName"]')
+        return self.extract_link_and_name(author_anchor_tags, url, extract_author=True)
+
     def get_genres(self, page_sel, url):
         genre_anchor_tags = page_sel.xpath(
             '//a[contains(@href, "/work/shelves/")]/../../following-sibling::div//div[contains(@class, "elementList ")]/div[@class="left"]//a')
@@ -166,12 +171,15 @@ class GoodreadsSpider(scrapy.Spider):
     def get_related_book_links(self, page_sel):
         return page_sel.xpath('//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href').extract()
 
-    def extract_link_and_name(self, anchor_tags, url):
+    def extract_link_and_name(self, anchor_tags, url, extract_author=False):
         link_and_name = {}
         for tag in anchor_tags:
             link = tag.xpath('@href').get()
-            name = tag.xpath('text()').get()
-            link_and_name[urljoin(url, link)] = name.lower()
+            if extract_author:
+                name = tag.xpath('./span/text()').get()
+            else:
+                name = tag.xpath('text()').get()
+            link_and_name[urljoin(url, link)] = remove_extra_spaces(name.lower())
 
         # if there was no data extracted, return None
         if not link_and_name:

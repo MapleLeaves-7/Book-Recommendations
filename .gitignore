@@ -6,3 +6,6 @@
 venv/
 
 **__pycache__/
+
+# ignore meilisearch data
+data.ms

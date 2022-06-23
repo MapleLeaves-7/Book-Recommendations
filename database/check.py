@@ -10,7 +10,7 @@ sys.path.insert(0, parent_dir)
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import and_
-from books_scraper.books_scraper.models import Book, get_engine
+from models import Book, get_engine
 
 engine = get_engine()
 Session = sessionmaker(bind=engine)

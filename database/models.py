@@ -5,7 +5,7 @@ from sqlalchemy import (
     Integer, String, Date, Float, Boolean
 )
 from sqlalchemy_utils import database_exists, create_database
-from database.database_settings import postgresql as db_settings
+from database_settings import postgresql as db_settings
 
 Base = declarative_base()
 

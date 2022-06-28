@@ -1,15 +1,6 @@
-# add parent directory to path
 from models import Book, get_engine
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker
-from inspect import getsourcefile
-import os.path
-import sys
-current_path = os.path.abspath(getsourcefile(lambda: 0))
-current_dir = os.path.dirname(current_path)
-parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
-
-sys.path.insert(0, parent_dir)
 
 engine = get_engine()
 Session = sessionmaker(bind=engine)

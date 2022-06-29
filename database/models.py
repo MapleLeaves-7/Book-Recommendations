@@ -5,7 +5,19 @@ from sqlalchemy import (
     Integer, String, Date, Float, Boolean
 )
 from sqlalchemy_utils import database_exists, create_database
-from database_settings import postgresql as db_settings
+
+# add parent directory to path so that database settings can always be imported properly
+from inspect import getsourcefile
+import os.path
+import sys
+current_path = os.path.abspath(getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+
+sys.path.insert(0, parent_dir)
+
+from database.database_settings import postgresql as db_settings  # nopep8 (disable autopep8 formatting for this line) -> so that import statement does not get moved to the top
+
 
 Base = declarative_base()
 

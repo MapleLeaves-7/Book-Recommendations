@@ -104,7 +104,7 @@ class Book(Base):
                                  primaryjoin=id == book_related_book.c.book_id,
                                  secondaryjoin=id == book_related_book.c.related_book_id)
     # panda id when the data was first read and processed -> maps to respective row / column in numpy cosine similarity matrix that was dumped out
-    pd_id = Column(Integer)
+    np_id = Column(Integer)
 
 
 class Author(Base):

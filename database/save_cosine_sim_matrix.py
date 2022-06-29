@@ -49,7 +49,7 @@ with Session.begin() as session:
         db_id = row['id']
         book = session.query(Book).filter(Book.id == db_id).first()
         if book:
-            book.pd_id = index
+            book.np_id = index
             session.add(book)
 
     description = df['description']

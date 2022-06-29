@@ -4,14 +4,17 @@ from sqlalchemy.orm import sessionmaker
 from inspect import getsourcefile
 import os.path
 import sys
-current_path = os.path.abspath(getsourcefile(lambda:0))
+current_path = os.path.abspath(getsourcefile(lambda: 0))
 current_dir = os.path.dirname(current_path)
 parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
 parent_parent_dir = parent_dir[:parent_dir.rfind(os.path.sep)]
 
 sys.path.insert(0, parent_parent_dir)
 
-from database.models import Book, Author, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables
+
+from database.models import Book, Author, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables  # nopep8 (disable autopep8 formatting for this line)
+
+
 class SaveBookPipeline:
     def __init__(self):
         """

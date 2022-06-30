@@ -54,10 +54,11 @@ with Session.begin() as session:
 
     description = df['description']
 
-    # Create TfidfVectorizer object
-    vectorizer = TfidfVectorizer()
+    # create TfidfVectorizer object
+    # modify token pattern so that tokens must contain at least one letter
+    vectorizer = TfidfVectorizer(token_pattern=u'(?ui)\\b\\w*[a-z]+\\w*\\b')
 
-    # Generate matrix of word vectors
+    # generate matrix of word vectors
     tfidf_matrix = vectorizer.fit_transform(description)
 
     # feature_names = vectorizer.get_feature_names_out()

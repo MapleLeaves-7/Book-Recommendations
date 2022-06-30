@@ -6,7 +6,7 @@ from models import Book, get_engine
 from sqlalchemy.orm import sessionmaker
 
 
-def compare_cosine_sim(matrix_filename, output_filename):
+def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
     engine = get_engine()
     Session = sessionmaker(bind=engine)
 
@@ -15,6 +15,8 @@ def compare_cosine_sim(matrix_filename, output_filename):
         books_tfidf = []
 
         for np_id1, row in enumerate(cosine_sim_matrix):
+            if max_row_iter is not None and np_id1 > max_row_iter:
+                break
             book1 = session.query(Book).filter(Book.np_id == np_id1).first()
             tfidf_comparision = {
                 "id": book1.id,
@@ -70,4 +72,4 @@ def compare_cosine_sim(matrix_filename, output_filename):
             json.dump(books_tfidf, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    compare_cosine_sim('cosine_sim_matrix.npy', 'tfidf_comparision_base.json')
+    compare_cosine_sim('cosine_sim_matrix.npy', 'tfidf_comparision_base.json', 200)

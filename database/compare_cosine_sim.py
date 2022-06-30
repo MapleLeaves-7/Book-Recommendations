@@ -15,7 +15,7 @@ def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
         books_tfidf = []
 
         for np_id1, row in enumerate(cosine_sim_matrix):
-            if max_row_iter is not None and np_id1 > max_row_iter:
+            if max_row_iter is not None and np_id1 >= max_row_iter:
                 break
             book1 = session.query(Book).filter(Book.np_id == np_id1).first()
             tfidf_comparision = {

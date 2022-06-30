@@ -106,6 +106,9 @@ class Book(Base):
     # panda id when the data was first read and processed -> maps to respective row / column in numpy cosine similarity matrix that was dumped out
     np_id = Column(Integer)
 
+    def as_dict(self):
+       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
+
 
 class Author(Base):
     __tablename__ = "authors"
@@ -113,6 +116,9 @@ class Author(Base):
     id = Column(Integer, primary_key=True)
     link = Column(String, nullable=False, unique=True)
     name = Column(String(50))
+
+    def as_dict(self):
+       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
 
 
 class Genre(Base):
@@ -122,6 +128,9 @@ class Genre(Base):
     link = Column(String, nullable=False, unique=True)
     name = Column(String(50))
 
+    def as_dict(self):
+       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
+
 
 class StorySetting(Base):
     __tablename__ = "story_settings"
@@ -129,3 +138,6 @@ class StorySetting(Base):
     id = Column(Integer, primary_key=True)
     link = Column(String, nullable=False, unique=True)
     name = Column(String(50))
+
+    def as_dict(self):
+       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 

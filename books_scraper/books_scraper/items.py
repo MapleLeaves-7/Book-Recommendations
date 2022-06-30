@@ -12,6 +12,13 @@ def remove_extra_spaces(text):
 def clean_description(text):
     return text.replace("An alternative cover edition for this ISBN can be found here.", "")
 
+# Check that text contains words
+def word_exists(text):
+    regex = re.compile("(?:\w+\s)*\w+")
+    match = regex.search(text)
+    if not match:
+        return None
+    return match
 
 def extract_integer(text):
     # Regex to extract number
@@ -56,9 +63,9 @@ def extract_date(date_published):
 
 class BookMetadataItem(Item):
     link = Field(output_processor=TakeFirst())
-    title = Field(input_processor=MapCompose(remove_extra_spaces), output_processor=TakeFirst())
+    title = Field(input_processor=MapCompose(word_exists, remove_extra_spaces), output_processor=TakeFirst())
     authors = Field(output_processor=TakeFirst())
-    description = Field(input_processor=MapCompose(clean_description, remove_extra_spaces), output_processor=Join())
+    description = Field(input_processor=MapCompose(word_exists, clean_description, remove_extra_spaces), output_processor=Join())
     num_pages = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
     num_ratings = Field(input_processor=MapCompose(extract_integer), output_processor=TakeFirst())
     rating_value = Field(input_processor=MapCompose(remove_extra_spaces, extract_float), output_processor=TakeFirst())

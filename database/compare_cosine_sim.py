@@ -18,8 +18,9 @@ with Session.begin() as session:
         tfidf_comparision = {
             "id": book1.id,
             "title": book1.title,
+            "most_sim": [],
             "related": [],
-            "unrelated": []
+            "unrelated_random": []
         }
 
         related_book_np_ids = [book.np_id for book in book1.related_books]
@@ -34,6 +35,18 @@ with Session.begin() as session:
                                                  "title": book.title,
                                                  "sim": sim_python})
 
+
+        # sort based on similarity    
+        cosine_sim_row = list(enumerate(cosine_sim_matrix[np_id1].tolist()))
+        cosine_sim_row.sort(key=lambda x: x[1], reverse=True)
+        # get 5 most similar books using cosine_sim_matrix
+        for np_id2, sim in cosine_sim_row[1:6]:
+            book = session.query(Book).filter(Book.np_id == np_id2).first()
+            tfidf_comparision["unrelated_most_sim"].append({"id": book.id,
+                                                 "title": book.title,
+                                                 "sim": sim})
+        
+
         random_integers = []
 
         while len(random_integers) < 5:
@@ -46,7 +59,7 @@ with Session.begin() as session:
             sim = cosine_sim_matrix[np_id1][np_id2]
             sim_python = sim.item()
             book = session.query(Book).filter(Book.np_id == np_id2).first()
-            tfidf_comparision["unrelated"].append({"id": book.id,
+            tfidf_comparision["unrelated_random"].append({"id": book.id,
                                                    "title": book.title,
                                                    "sim": sim_python})
 

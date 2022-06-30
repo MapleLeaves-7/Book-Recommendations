@@ -72,4 +72,5 @@ def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
             json.dump(books_tfidf, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    compare_cosine_sim('cosine_sim_matrix.npy', 'tfidf_comparision_base.json', 200)
+    # compare_cosine_sim('cosine_sim_matrix.npy', 'tfidf_comparision_base.json', 200)
+    compare_cosine_sim('cosine_sim_matrix_stemmed.npy', 'tfidf_comparision_base_stemmed.json', 200)

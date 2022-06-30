@@ -42,7 +42,7 @@ with Session.begin() as session:
         # get 5 most similar books using cosine_sim_matrix
         for np_id2, sim in cosine_sim_row[1:6]:
             book = session.query(Book).filter(Book.np_id == np_id2).first()
-            tfidf_comparision["unrelated_most_sim"].append({"id": book.id,
+            tfidf_comparision["most_sim"].append({"id": book.id,
                                                  "title": book.title,
                                                  "sim": sim})
         

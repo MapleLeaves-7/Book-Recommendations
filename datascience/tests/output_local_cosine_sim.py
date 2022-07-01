@@ -1,16 +1,16 @@
-from pathlib import Path
-grandparent_dir = Path(__file__).parents[1]
-# add parent directory to python path
-sys.path.insert(0, grandparent_dir)
-
-from db.models import Book, get_engine
-
 import sys
 import json
 from random import randint
+from pathlib import Path
 
 import numpy as np
 from sqlalchemy.orm import sessionmaker
+
+# add grandparent directory to python path
+grandparent_dir = Path(__file__).parents[1]
+sys.path.insert(0, grandparent_dir)
+
+from db.models import Book, get_engine
 
 
 def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):

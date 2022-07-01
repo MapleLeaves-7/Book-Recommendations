@@ -1,26 +1,25 @@
+import time
+import sys
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
-import time
+import nltk
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+from sqlalchemy.orm import sessionmaker
 
-# get parent directory
-import os
-import sys
-path = os.getcwd()
-parent_dir = os.path.abspath(os.path.join(path, os.pardir))
 # add parent directory to python path
+parent_dir = Path(__file__).parents[0]
 sys.path.insert(0, parent_dir)
 
-import nltk
 # add ../nltk_data to nltk path
-nltk.data.path.append(parent_dir + "/nltk_data")
+nltk.data.path.append(str(parent_dir) + "/nltk_data")
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize 
 
 from db.models import Book, get_engine, create_all_tables
-from sqlalchemy.orm import sessionmaker
 
 
 engine = get_engine()

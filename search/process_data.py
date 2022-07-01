@@ -1,17 +1,16 @@
-# add parent directory to path
-from inspect import getsourcefile
-import os.path
+import json
 import sys
-current_path = os.path.abspath(getsourcefile(lambda: 0))
-current_dir = os.path.dirname(current_path)
-parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+from pathlib import Path
 
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import or_, and_
+
+# add parent directory to python path
+parent_dir = Path(__file__).parents[0]
 sys.path.insert(0, parent_dir)
 
 from db.models import Book, Author, get_engine, create_all_tables
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import or_, and_
-import json
+
 
 engine = get_engine()
 create_all_tables(engine)

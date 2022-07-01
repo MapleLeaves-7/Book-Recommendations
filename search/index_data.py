@@ -36,6 +36,9 @@ def get_processed_books():
     return all_books    
 
 def index_data():
+    """
+    Indexes and then returns processed books
+    """
     all_books = get_processed_books()
     client.index("books").add_documents(all_books)
     return all_books

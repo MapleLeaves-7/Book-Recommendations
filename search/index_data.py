@@ -1,7 +1,7 @@
-import json
 import sys
 from pathlib import Path
 
+import meilisearch
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_, and_
 
@@ -15,6 +15,7 @@ from db.models import Book, Author, get_engine, create_all_tables
 engine = get_engine()
 create_all_tables(engine)
 Session = sessionmaker(bind=engine)
+client = meilisearch.Client('http://127.0.0.1:7700')
 
 def get_processed_books():
     all_books = []
@@ -32,4 +33,12 @@ def get_processed_books():
             book_dict["authors"] = [Author.as_dict(author) for author in book.authors]
             all_books.append(book_dict)
 
+    return all_books    
+
+def index_data():
+    all_books = get_processed_books()
+    client.index("books").add_documents(all_books)
     return all_books
+
+if __name__ == "__main__":
+    index_data()

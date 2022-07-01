@@ -16,7 +16,7 @@ parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
 
 sys.path.insert(0, parent_dir)
 
-from database.database_settings import postgresql as db_settings  # nopep8 (disable autopep8 formatting for this line) -> so that import statement does not get moved to the top
+from db.db_config import postgresql as db_settings  # nopep8 (disable autopep8 formatting for this line) -> so that import statement does not get moved to the top
 
 
 Base = declarative_base()

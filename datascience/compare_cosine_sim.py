@@ -10,7 +10,7 @@ parent_dir = os.path.abspath(os.path.join(path, os.pardir))
 # add parent directory to python path
 sys.path.insert(0, parent_dir)
 
-from database.models import Book, get_engine
+from db.models import Book, get_engine
 from sqlalchemy.orm import sessionmaker
 
 

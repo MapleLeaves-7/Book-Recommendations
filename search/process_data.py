@@ -8,7 +8,7 @@ parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
 
 sys.path.insert(0, parent_dir)
 
-from database.models import Book, Author, get_engine, create_all_tables
+from db.models import Book, Author, get_engine, create_all_tables
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_, and_
 import json

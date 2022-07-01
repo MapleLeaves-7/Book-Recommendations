@@ -19,7 +19,7 @@ nltk.data.path.append(parent_dir + "/nltk_data")
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize 
 
-from database.models import Book, get_engine, create_all_tables
+from db.models import Book, get_engine, create_all_tables
 from sqlalchemy.orm import sessionmaker
 
 

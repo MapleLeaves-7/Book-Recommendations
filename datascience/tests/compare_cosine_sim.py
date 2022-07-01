@@ -1,16 +1,15 @@
-import os
+from pathlib import Path
+grandparent_dir = Path(__file__).parents[1]
+# add parent directory to python path
+sys.path.insert(0, grandparent_dir)
+
+from db.models import Book, get_engine
+
 import sys
 import json
 from random import randint
 
 import numpy as np
-# get parent directory
-path = os.getcwd()
-parent_dir = os.path.abspath(os.path.join(path, os.pardir))
-# add parent directory to python path
-sys.path.insert(0, parent_dir)
-
-from db.models import Book, get_engine
 from sqlalchemy.orm import sessionmaker
 
 
@@ -80,5 +79,5 @@ def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
             json.dump(books_tfidf, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    compare_cosine_sim('./data/cosine_sim_matrix.npy', './data/tfidf_comparision_base.json', 200)
-    # compare_cosine_sim('./data/cosine_sim_matrix_stemmed.npy', './data/tfidf_comparision_base_stemmed.json', 200)
+    compare_cosine_sim('../data/cosine_sim_matrix.npy', '../data/tfidf_comparision_base.json', 200)
+    # compare_cosine_sim('../data/cosine_sim_matrix_stemmed.npy', '../data/tfidf_comparision_base_stemmed.json', 200)

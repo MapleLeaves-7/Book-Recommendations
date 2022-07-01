@@ -12,7 +12,7 @@ parent_parent_dir = parent_dir[:parent_dir.rfind(os.path.sep)]
 sys.path.insert(0, parent_parent_dir)
 
 
-from database.models import Book, Author, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables  # nopep8 (disable autopep8 formatting for this line)
+from db.models import Book, Author, Genre, StorySetting, get_engine, create_all_tables, drop_all_tables  # nopep8 (disable autopep8 formatting for this line)
 
 
 class SaveBookPipeline:

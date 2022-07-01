@@ -1,21 +1,26 @@
 import pandas as pd
 import numpy as np
 import time
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 
-from models import Book, get_engine, create_all_tables
-from sqlalchemy.orm import sessionmaker
-
 # get parent directory
 import os
+import sys
 path = os.getcwd()
 parent_dir = os.path.abspath(os.path.join(path, os.pardir))
+# add parent directory to python path
+sys.path.insert(0, parent_dir)
 
 import nltk
+# add ../nltk_data to nltk path
 nltk.data.path.append(parent_dir + "/nltk_data")
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize 
+
+from database.models import Book, get_engine, create_all_tables
+from sqlalchemy.orm import sessionmaker
 
 
 engine = get_engine()
@@ -55,7 +60,7 @@ def get_cosine_sim(tfidf_matrix):
 
 with Session.begin() as session:
     ps = PorterStemmer()
-    df = pd.read_sql(session.query(Book).filter(Book.description != None).statement, session.bind)
+    df = pd.read_sql(session.query(Book).filter(Book.description != None).limit(100).statement, session.bind)
 
     # update numpy index in database
     for index, row in df.iterrows():
@@ -93,4 +98,4 @@ with Session.begin() as session:
     # get_cosine_sim(tfidf_matrix)
     # print(cosine_sim_matrix)
     # print(type(cosine_sim_matrix))
-    np.save('cosine_sim_matrix_stemmed', cosine_sim_matrix)
+    np.save('./data/cosine_sim_matrix_stemmed', cosine_sim_matrix)

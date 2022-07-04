@@ -8,6 +8,7 @@ import nltk
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker
 
 # add parent directory to python path
@@ -19,7 +20,7 @@ nltk.data.path.append(str(parent_dir) + "/nltk_data")
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize 
 
-from db.models import Book, get_engine, create_all_tables
+from db.models import Book, get_engine, create_all_tables, BookSimilarBook
 
 
 engine = get_engine()
@@ -94,7 +95,27 @@ with Session.begin() as session:
     # print(df)
 
     cosine_sim_matrix = get_linear_kernel(tfidf_matrix)
-    # get_cosine_sim(tfidf_matrix)
-    # print(cosine_sim_matrix)
-    # print(type(cosine_sim_matrix))
+
+    for np_id1, row in enumerate(cosine_sim_matrix):
+        # get book with the current np_id1
+        current_book = session.query(Book).filter(Book.np_id == np_id1).first()
+
+        # sort based on similarity
+        cosine_sim_row = list(enumerate(cosine_sim_matrix[np_id1].tolist()))
+        cosine_sim_row.sort(key=lambda x: x[1], reverse=True)
+        # get 10 most similar books using cosine_sim_matrix
+        for np_id2, sim in cosine_sim_row[1:11]:
+            # skip those that have similarity 0
+            if sim == 0:
+                continue
+            
+            similar_book = session.query(Book).filter(Book.np_id == np_id2).first()
+            new_book_similar_book = BookSimilarBook(current_book_id=current_book.id, similar_book_id=similar_book.id)
+            exists_book_similar_book = session.query(BookSimilarBook).filter(and_(BookSimilarBook.current_book_id==current_book.id, 
+                                                                                  BookSimilarBook.similar_book_id==similar_book.id)).first()
+            if exists_book_similar_book:
+                new_book_similar_book = exists_book_similar_book
+            new_book_similar_book.sim = sim
+            session.add(new_book_similar_book)
+                        
     np.save('./data/cosine_sim_matrix_stemmed', cosine_sim_matrix)

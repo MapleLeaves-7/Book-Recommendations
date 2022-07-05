@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MeiliSearch } from 'meilisearch';
-import { BookHits } from './components';
+import { BookCard } from './components';
 
 const client = new MeiliSearch({
   host: 'http://127.0.0.1:7700',
@@ -32,7 +32,7 @@ function App() {
       <div>
         <h1>searched results</h1>
         {searchResults.map(result => (
-          <BookHits
+          <BookCard
             key={result.id}
             link={result.link}
             title={result.title}

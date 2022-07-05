@@ -9,3 +9,5 @@ venv/
 
 # ignore meilisearch data
 data.ms
+
+node_modules

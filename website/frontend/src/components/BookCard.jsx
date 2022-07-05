@@ -1,4 +1,4 @@
-export function BookHits({ link, title, description, authors }) {
+export function BookCard({ link, title, description, authors }) {
   return (
     <div>
       <h2>{title}</h2>

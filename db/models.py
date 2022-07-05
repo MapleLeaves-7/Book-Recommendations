@@ -1,21 +1,18 @@
-from sqlalchemy import UniqueConstraint, create_engine, Column, Table, ForeignKey
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.associationproxy import association_proxy
+import sys
+from pathlib import Path
+
+from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy import (
     Integer, String, Date, Float, Boolean
 )
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy import UniqueConstraint, create_engine, Column, Table, ForeignKey
 
 # add parent directory to path so that database settings can always be imported properly
-from inspect import getsourcefile
-import os.path
-import sys
-current_path = os.path.abspath(getsourcefile(lambda: 0))
-current_dir = os.path.dirname(current_path)
-parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
-
-sys.path.insert(0, parent_dir)
+parent_dir = Path(__file__).parents[1]
+sys.path.insert(0, str(parent_dir))
 
 from db.db_config import postgresql as db_settings  # nopep8 (disable autopep8 formatting for this line) -> so that import statement does not get moved to the top
 
@@ -75,14 +72,15 @@ book_related_book = Table('book_related_book',
                           UniqueConstraint('book_id', 'related_book_id', name='unique_related_books')
                           )
 
+
 class BookSimilarBook(Base):
     # similar books are based on own recommendations
     __tablename__ = "book_similar_book"
 
     id = Column(Integer, primary_key=True)
     current_book_id = Column(Integer, ForeignKey('books.id'))
-    similar_book_id =  Column(Integer, ForeignKey('books.id'))
-    sim = Column(Float) # cosine similarity bewteen books
+    similar_book_id = Column(Integer, ForeignKey('books.id'))
+    sim = Column(Float)  # cosine similarity bewteen books
 
 
 class Book(Base):
@@ -118,10 +116,10 @@ class Book(Base):
 
     # note: similar books are based on own recommendations
     # contains a list of BookSimilarBook objects where the id of the current book is the same as the current_book_id of BookSimilarBook
-    similar_books = relationship('BookSimilarBook', primaryjoin=id==BookSimilarBook.current_book_id)
+    similar_books = relationship('BookSimilarBook', primaryjoin=id == BookSimilarBook.current_book_id)
 
     def as_dict(self):
-       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
 class Author(Base):
@@ -132,7 +130,7 @@ class Author(Base):
     name = Column(String(50))
 
     def as_dict(self):
-       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
 class Genre(Base):
@@ -143,7 +141,7 @@ class Genre(Base):
     name = Column(String(50))
 
     def as_dict(self):
-       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
 class StorySetting(Base):
@@ -154,11 +152,11 @@ class StorySetting(Base):
     name = Column(String(50))
 
     def as_dict(self):
-       return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns} 
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-## alternative relation
-## add the following 2 lines to the Book class
+# alternative relation
+# add the following 2 lines to the Book class
 # current_books = association_proxy("current_book_relations", "current_book")
 # similar_books = association_proxy("similar_books_relations", "similar_book")
 

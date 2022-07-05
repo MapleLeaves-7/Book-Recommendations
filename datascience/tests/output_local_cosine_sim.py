@@ -7,10 +7,10 @@ import numpy as np
 from sqlalchemy.orm import sessionmaker
 
 # add grandparent directory to python path
-grandparent_dir = Path(__file__).parents[1]
-sys.path.insert(0, grandparent_dir)
+grandparent_dir = Path(__file__).parents[2]
+sys.path.insert(0, str(grandparent_dir))
 
-from db.models import Book, get_engine
+from db.models import Book, get_engine  # nopep8 (disable autopep8 formatting for this line)
 
 
 def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
@@ -43,19 +43,17 @@ def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
                 book = session.query(Book).filter(Book.np_id == np_id2).first()
                 tfidf_comparision["related"].append({"id": book.id,
                                                     "title": book.title,
-                                                    "sim": sim_python})
+                                                     "sim": sim_python})
 
-
-            # sort based on similarity    
+            # sort based on similarity
             cosine_sim_row = list(enumerate(cosine_sim_matrix[np_id1].tolist()))
             cosine_sim_row.sort(key=lambda x: x[1], reverse=True)
             # get 5 most similar books using cosine_sim_matrix
             for np_id2, sim in cosine_sim_row[1:6]:
                 book = session.query(Book).filter(Book.np_id == np_id2).first()
                 tfidf_comparision["most_sim"].append({"id": book.id,
-                                                    "title": book.title,
-                                                    "sim": sim})
-            
+                                                      "title": book.title,
+                                                      "sim": sim})
 
             random_integers = []
 
@@ -70,13 +68,14 @@ def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
                 sim_python = sim.item()
                 book = session.query(Book).filter(Book.np_id == np_id2).first()
                 tfidf_comparision["unrelated_random"].append({"id": book.id,
-                                                    "title": book.title,
-                                                    "sim": sim_python})
+                                                              "title": book.title,
+                                                              "sim": sim_python})
 
             books_tfidf.append(tfidf_comparision)
 
         with open(output_filename, 'w', encoding='utf-8') as f:
             json.dump(books_tfidf, f, ensure_ascii=False, indent=4)
+
 
 if __name__ == "__main__":
     compare_cosine_sim('../data/cosine_sim_matrix.npy', '../data/tfidf_comparision_base.json', 200)

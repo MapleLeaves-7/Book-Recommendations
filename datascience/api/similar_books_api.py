@@ -5,10 +5,9 @@ from flask import Flask, jsonify
 from sqlalchemy.orm import sessionmaker
 
 # add grandparent directory to python path
-grandparent_dir = Path(__file__).parents[1]
-sys.path.insert(0, grandparent_dir)
-
-from db.models import Book, get_engine, Book
+grandparent_dir = Path(__file__).parents[2]
+sys.path.insert(0, str(grandparent_dir))
+from db.models import Book, get_engine, Book  # nopep8 (disable autopep8 formatting for this line)
 
 app = Flask(__name__)
 engine = get_engine()
@@ -24,5 +23,5 @@ def get_similar_books(book_id):
         for similar_book_id in similar_book_ids:
             similar_book = session.query(Book).filter(Book.id == similar_book_id).first()
             if similar_book:
-                similar_books.append(Book.as_dict(similar_book)) # convert to dictionary before returning
+                similar_books.append(Book.as_dict(similar_book))  # convert to dictionary before returning
     return jsonify(similar_books)

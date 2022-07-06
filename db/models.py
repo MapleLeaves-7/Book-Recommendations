@@ -103,6 +103,7 @@ class Book(Base):
     rating_value = Column(Float(5))
     date_published = Column(Date)
     book_cover = Column(String)
+    language = Column(String(50))
     # M-to-M relationship between books and genres
     genres = relationship('Genre', secondary='book_genre', backref='Book')
     # M-to-M relationship between books and story settings

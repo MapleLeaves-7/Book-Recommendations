@@ -27,7 +27,7 @@ export function BookResult() {
             <li key={author.link}>{author.name}</li>
           ))}
         </ul>
-        <p>Goodreads Link: {currentBook.link}</p>
+        <a href={currentBook.link}>Goodreads Link: {currentBook.link}</a>
         <p>Description: {currentBook.description}</p>
         <h2>Similar Books</h2>
         {similarBooks.length > 0 &&

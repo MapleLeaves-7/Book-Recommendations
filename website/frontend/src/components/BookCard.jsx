@@ -7,7 +7,7 @@ export function BookCard({ id, link, title, description, authors }) {
           <li key={author.link}>{author.name}</li>
         ))}
       </ul>
-      <p>Goodreads Link: {link}</p>
+      <a href={link}>Goodreads Link: {link}</a>
       <p>Description: {description}</p>
     </a>
   );

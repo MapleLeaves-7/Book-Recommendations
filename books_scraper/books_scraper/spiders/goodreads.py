@@ -118,9 +118,10 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_xpath('num_pages', '//span[@itemprop="numberOfPages"]/text()')
             loader.add_xpath('num_ratings', '//a[@href="#other_reviews"][1]/meta/@content')
             loader.add_xpath('rating_value', '//span[@itemprop="ratingValue"]/text()')
+            loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
+            loader.add_xpath('book_cover', '//img[@id="coverImage"]/@src')
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
-            loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
             # loader.add_xpath('related_book_links', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
             loader.add_value('related_book_links', related_book_links)
 
@@ -130,7 +131,7 @@ class GoodreadsSpider(scrapy.Spider):
             print(e)
             loader.add_value('link', response.request.url)
             attributes = ["title", "authors", "description", "num_pages", "num_ratings",
-                          "rating_value", "date_published", "genres", "date_published", "related_book_links"]
+                          "rating_value", "date_published", "book_cover", "genres", "date_published", "related_book_links"]
             for attribute in attributes:
                 loader.add_value(attribute, None)
 

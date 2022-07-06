@@ -19,7 +19,7 @@ def word_exists(text):
     match = regex.search(text)
     if not match:
         return None
-    return match.group()
+    return text
 
 
 def extract_integer(text):

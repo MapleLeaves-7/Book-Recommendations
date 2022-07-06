@@ -73,6 +73,7 @@ class BookMetadataItem(Item):
     rating_value = Field(input_processor=MapCompose(remove_extra_spaces, extract_float), output_processor=TakeFirst())
     date_published = Field(input_processor=MapCompose(remove_extra_spaces, extract_date), output_processor=TakeFirst())
     book_cover = Field(output_processor=TakeFirst())
+    language = Field(input_processor=MapCompose(str.lower, remove_extra_spaces), output_processor=TakeFirst())
     genres = Field(output_processor=TakeFirst())
     settings = Field(output_processor=TakeFirst())
     related_book_links = Field()

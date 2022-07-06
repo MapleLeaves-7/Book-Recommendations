@@ -43,14 +43,15 @@ class SaveBookPipeline:
             # set it to true initially
             book.has_all_data = True
 
-        attributes = ["title", "description", "num_pages", "num_ratings", "rating_value", "date_published", "book_cover"]
+        attributes = ["title", "description", "num_pages", "num_ratings", "rating_value", "date_published", "book_cover", "language"]
 
         # check if attributes are None, if not, sets the attributes
         for attribute in attributes:
             # if attribute is None, it would not be attached to item
             if attribute not in item or not item[attribute]:
-                # don't consider book cover when setting has_all_data (i.e. if book does not have book cover, has_all_data can still be true)
-                if attribute != "book_cover":
+                # don't consider book cover or language when setting has_all_data
+                # #(i.e. if book does not have book cover, has_all_data can still be true)
+                if attribute != "book_cover" and attribute != "language":
                     book.has_all_data = False
                 continue
             setattr(book, attribute, item[attribute])

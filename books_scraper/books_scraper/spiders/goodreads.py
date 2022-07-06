@@ -120,6 +120,7 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_xpath('rating_value', '//span[@itemprop="ratingValue"]/text()')
             loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
             loader.add_xpath('book_cover', '//img[@id="coverImage"]/@src')
+            loader.add_xpath('language', '//div[@itemprop="inLanguage"]/text()')
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
             # loader.add_xpath('related_book_links', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
@@ -130,8 +131,8 @@ class GoodreadsSpider(scrapy.Spider):
         except Exception as e:
             print(e)
             loader.add_value('link', response.request.url)
-            attributes = ["title", "authors", "description", "num_pages", "num_ratings",
-                          "rating_value", "date_published", "book_cover", "genres", "date_published", "related_book_links"]
+            attributes = ["title", "authors", "description", "num_pages", "num_ratings", "rating_value",
+                          "date_published", "book_cover", "language", "genres", "date_published", "related_book_links"]
             for attribute in attributes:
                 loader.add_value(attribute, None)
 

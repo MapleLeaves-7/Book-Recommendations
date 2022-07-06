@@ -12,13 +12,15 @@ def remove_extra_spaces(text):
 def clean_description(text):
     return text.replace("An alternative cover edition for this ISBN can be found here.", "")
 
+
 # Check that text contains words
 def word_exists(text):
     regex = re.compile("(?:\w+\s)*\w+")
     match = regex.search(text)
     if not match:
         return None
-    return match
+    return match.group()
+
 
 def extract_integer(text):
     # Regex to extract number

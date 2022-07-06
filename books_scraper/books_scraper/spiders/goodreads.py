@@ -38,9 +38,24 @@ class GoodreadsSpider(scrapy.Spider):
 
     def parse_list(self, response):
         book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()
+
+        # save book links crawled from page list into db first
+        for link in book_links:
+            loader = ItemLoader(item=BookMetadataItem(), selector=response)
+            loader.add_value('link', urljoin(response.request.url, link))
+            attributes = ["title", "authors", "description", "num_pages", "num_ratings", "rating_value",
+                          "date_published", "book_cover", "language", "genres", "date_published", "related_book_links"]
+            for attribute in attributes:
+                loader.add_value(attribute, None)
+
+            metadata_item = loader.load_item()
+            yield metadata_item
+
+        # crawl into book link to get metadata
         for link in book_links:
             time.sleep(2)
             yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
+
         # i = 0
         # for link in book_links:
         #     if i > 2:

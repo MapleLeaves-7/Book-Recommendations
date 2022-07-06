@@ -2,26 +2,38 @@ import sys
 from pathlib import Path
 
 from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
 from sqlalchemy.orm import sessionmaker
 
 # add grandparent directory to python path
 grandparent_dir = Path(__file__).parents[2]
 sys.path.insert(0, str(grandparent_dir))
-from db.models import Book, get_engine, Book  # nopep8 (disable autopep8 formatting for this line)
+from db.models import Book, get_engine, Book, Author  # nopep8 (disable autopep8 formatting for this line)
 
+# setup flask app
 app = Flask(__name__)
+cors = CORS(app)  # allow cors
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+# setup sqlalchemy db connection
 engine = get_engine()
 Session = sessionmaker(bind=engine)
 
 
-@app.route("/api/similar_books/<int:book_id>")
+@app.route("/api/book/similar_books/<int:book_id>")
+@cross_origin()
 def get_similar_books(book_id):
     similar_books = []
     with Session.begin() as session:
         book = session.query(Book).filter(Book.id == book_id).first()
         similar_book_ids = [book.similar_book_id for book in book.similar_books]
+        print(similar_book_ids)
         for similar_book_id in similar_book_ids:
             similar_book = session.query(Book).filter(Book.id == similar_book_id).first()
             if similar_book:
-                similar_books.append(Book.as_dict(similar_book))  # convert to dictionary before returning
+                # convert sql book object to python dictionary format
+                similar_book_dict = Book.as_dict(similar_book)
+                # convert sql author object to python dictionary format to append to book
+                similar_book_dict["authors"] = [Author.as_dict(author) for author in book.authors]
+                similar_books.append(similar_book_dict)
     return jsonify(similar_books)

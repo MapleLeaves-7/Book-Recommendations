@@ -1,6 +1,6 @@
-export function BookCard({ link, title, description, authors }) {
+export function BookCard({ id, link, title, description, authors }) {
   return (
-    <div>
+    <a href={id}>
       <h2>{title}</h2>
       <ul>
         {authors.map(author => (
@@ -9,6 +9,6 @@ export function BookCard({ link, title, description, authors }) {
       </ul>
       <p>Goodreads Link: {link}</p>
       <p>Description: {description}</p>
-    </div>
+    </a>
   );
 }

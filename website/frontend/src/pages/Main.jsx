@@ -34,6 +34,7 @@ export function Main() {
         {searchResults.map(result => (
           <BookCard
             key={result.id}
+            id={result.id}
             link={result.link}
             title={result.title}
             description={result.description}

@@ -20,6 +20,25 @@ engine = get_engine()
 Session = sessionmaker(bind=engine)
 
 
+@app.route("/api/book/<int:book_id>")
+@cross_origin()
+def get_book(book_id):
+    book_dict = {}
+    with Session.begin() as session:
+        book = session.query(Book).filter(Book.id == book_id).first()
+        if not book:
+            return {"error": "invalid id"}, 400
+        if book.title == None or book.description == None or book.has_author == None:
+            return {"error": "missing title, description or author"}, 500
+
+        # convert sql book object to python dictionary format
+        book_dict = Book.as_dict(book)
+        # convert sql author object to python dictionary format to append to book
+        book_dict["authors"] = [Author.as_dict(author) for author in book.authors]
+
+    return jsonify(book_dict)
+
+
 @app.route("/api/book/similar_books/<int:book_id>")
 @cross_origin()
 def get_similar_books(book_id):

@@ -129,7 +129,7 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_value('link', response.request.url)
             loader.add_xpath('title', '//h1[@id="bookTitle"]/text()')
             loader.add_value('authors', self.get_authors(page_sel, response.request.url))
-            loader.add_xpath('description', '//div[@id="description"]/span[2]/text()')
+            loader.add_value('description', self.get_description(page_sel))
             loader.add_xpath('num_pages', '//span[@itemprop="numberOfPages"]/text()')
             loader.add_xpath('num_ratings', '//a[@href="#other_reviews"][1]/meta/@content')
             loader.add_xpath('rating_value', '//span[@itemprop="ratingValue"]/text()')
@@ -176,6 +176,16 @@ class GoodreadsSpider(scrapy.Spider):
     def get_authors(self, page_sel, url):
         author_anchor_tags = page_sel.xpath('//a[@class="authorName"]')
         return self.extract_link_and_name(author_anchor_tags, url, extract_author=True)
+
+    def get_description(self, page_sel):
+        # try to extract longer paragraph first
+        description = page_sel.xpath('//div[@id="description"]/span[2]/text()').get()
+
+        # extract shorter paragraph if longer paragraph does not exist
+        if not description:
+            description = page_sel.xpath('//div[@id="description"]/span/text()').get()
+
+        return description
 
     def get_genres(self, page_sel, url):
         genre_anchor_tags = page_sel.xpath(

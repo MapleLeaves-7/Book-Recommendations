@@ -121,21 +121,22 @@ class GoodreadsSpider(scrapy.Spider):
 
         # Reload page until login modal is gone for old page
         page_sel = self.remove_old_modal(page_sel, response.request.url)
+
         loader = ItemLoader(item=BookMetadataItem(), selector=page_sel)
 
         related_book_links = self.get_related_book_links(page_sel)
 
         try:
             loader.add_value('link', response.request.url)
-            loader.add_xpath('title', '//h1[@id="bookTitle"]/text()')
+            loader.add_xpath('title', '//h1[@id="bookTitle"]//text()')
             loader.add_value('authors', self.get_authors(page_sel, response.request.url))
             loader.add_value('description', self.get_description(page_sel))
-            loader.add_xpath('num_pages', '//span[@itemprop="numberOfPages"]/text()')
+            loader.add_xpath('num_pages', '//span[@itemprop="numberOfPages"]//text()')
             loader.add_xpath('num_ratings', '//a[@href="#other_reviews"][1]/meta/@content')
-            loader.add_xpath('rating_value', '//span[@itemprop="ratingValue"]/text()')
-            loader.add_xpath('date_published', '//div[contains(text(), "Published")]/text()')
+            loader.add_xpath('rating_value', '//span[@itemprop="ratingValue"]//text()')
+            loader.add_xpath('date_published', '//div[contains(text(), "Published")]//text()')
             loader.add_xpath('book_cover', '//img[@id="coverImage"]/@src')
-            loader.add_xpath('language', '//div[@itemprop="inLanguage"]/text()')
+            loader.add_xpath('language', '//div[@itemprop="inLanguage"]//text()')
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
             # loader.add_xpath('related_book_links', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
@@ -179,11 +180,11 @@ class GoodreadsSpider(scrapy.Spider):
 
     def get_description(self, page_sel):
         # try to extract longer paragraph first
-        description = page_sel.xpath('//div[@id="description"]/span[2]/text()').extract()
+        description = page_sel.xpath('//div[@id="description"]/span[2]//text()').extract()
 
         # extract shorter paragraph if longer paragraph does not exist
         if not description:
-            description = page_sel.xpath('//div[@id="description"]/span/text()').extract()
+            description = page_sel.xpath('//div[@id="description"]/span//text()').extract()
 
         return description
 

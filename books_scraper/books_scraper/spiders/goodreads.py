@@ -179,11 +179,11 @@ class GoodreadsSpider(scrapy.Spider):
 
     def get_description(self, page_sel):
         # try to extract longer paragraph first
-        description = page_sel.xpath('//div[@id="description"]/span[2]/text()').get()
+        description = page_sel.xpath('//div[@id="description"]/span[2]/text()').extract()
 
         # extract shorter paragraph if longer paragraph does not exist
         if not description:
-            description = page_sel.xpath('//div[@id="description"]/span/text()').get()
+            description = page_sel.xpath('//div[@id="description"]/span/text()').extract()
 
         return description
 

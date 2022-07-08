@@ -94,7 +94,7 @@ class Book(Base):
     has_genre = Column(Boolean)
     has_setting = Column(Boolean)
     has_related_books = Column(Boolean)
-    title = Column(String(150))
+    title = Column(String(500))
     # M-to-M relationship between books and authors
     authors = relationship('Author', secondary='book_author', backref='Book')
     description = Column(String)

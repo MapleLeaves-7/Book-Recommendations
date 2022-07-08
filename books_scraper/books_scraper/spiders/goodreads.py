@@ -1,15 +1,29 @@
-import scrapy
+from operator import and_
+import sys
+from pathlib import Path
 import time
 import re
 from urllib.parse import urljoin
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+import scrapy
 from scrapy.loader import ItemLoader
 from books_scraper.items import BookMetadataItem, remove_extra_spaces
+from sqlalchemy import and_
+from sqlalchemy.orm import sessionmaker
+
+
+# add grandparent directory to python path
+grandgrandparent_dir = Path(__file__).parents[3]
+sys.path.insert(0, str(grandgrandparent_dir))
+
+from db.models import Book, get_engine, create_all_tables, drop_all_tables  # nopep8 (disable autopep8 formatting for this line)
 
 
 class GoodreadsSpider(scrapy.Spider):
@@ -24,17 +38,50 @@ class GoodreadsSpider(scrapy.Spider):
         options.add_argument('--headless')
         self.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options)
+        engine = get_engine()
+        self.Session = sessionmaker(bind=engine)
 
     def start_requests(self):
         # start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
-        # start_urls = ["https://www.goodreads.com/book/show/22557272-the-girl-on-the-train"]
-        # start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once"]
-        start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=6"]
-        # start_urls = ["https://www.goodreads.com/book/show/264196.1984"]
+        # start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?"]
+        # start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=40"]
+
+        start_urls = []
+        start_urls += self.get_db_links_recrawl_description()
+        start_urls += self.get_db_links_no_description()
+        start_urls += self.get_db_links()
 
         for url in start_urls:
-            yield scrapy.Request(url=url, callback=self.parse_list)
-            # yield scrapy.Request(url=url, callback=self.parse_book_metadata)
+            # yield scrapy.Request(url=url, callback=self.parse_list)
+            time.sleep(1)
+            yield scrapy.Request(url=url, callback=self.parse_book_metadata)
+
+    # get links of books in db from first 40 pages to be recrawled due to bug that did not extract entire book description if in nested tag
+    def get_db_links_recrawl_description(self):
+        book_links = []
+        with self.Session.begin() as session:
+            books_to_recrawl = session.query(Book).filter(and_(Book.title != None, Book.description != None, Book.id < 30000)).all()
+            for book in books_to_recrawl:
+                book_links.append(book.link)
+        return book_links
+
+    # get links of books in db where the description was not extracted
+    def get_db_links_no_description(self):
+        book_links = []
+        with self.Session.begin() as session:
+            books_to_recrawl = session.query(Book).filter(and_(Book.title != None, Book.description == None)).all()
+            for book in books_to_recrawl:
+                book_links.append(book.link)
+        return book_links
+
+    # get links of books in db which have not been crawled yet
+    def get_db_links(self):
+        book_links = []
+        with self.Session.begin() as session:
+            books_to_crawl = session.query(Book).filter(Book.title == None).all()
+            for book in books_to_crawl:
+                book_links.append(book.link)
+        return book_links
 
     def parse_list(self, response):
         book_links = response.xpath('//a[@class="bookTitle"]/@href').extract()

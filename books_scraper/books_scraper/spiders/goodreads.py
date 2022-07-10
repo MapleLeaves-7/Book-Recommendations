@@ -255,7 +255,7 @@ class GoodreadsSpider(scrapy.Spider):
                 name = tag.xpath('./span/text()').get()
             else:
                 name = tag.xpath('text()').get()
-            link_and_name[urljoin(url, link)] = remove_extra_spaces(name.lower())
+            link_and_name[urljoin(url, link)] = remove_extra_spaces(name)
 
         # if there was no data extracted, return None
         if not link_and_name:

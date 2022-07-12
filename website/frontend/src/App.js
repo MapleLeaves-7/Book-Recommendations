@@ -1,4 +1,4 @@
-import { Main, BookResult } from './pages';
+import { Main, BookPage } from './pages';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
         </nav>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/book/:id" element={<BookResult />} />
+          <Route path="/book/:id" element={<BookPage />} />
         </Routes>
       </Router>
     </div>

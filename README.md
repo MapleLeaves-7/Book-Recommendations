@@ -41,4 +41,4 @@ FLASK_ENV="development"
 
 1. To run the backend api, enter `flask run` at root directory
 2. To run meilisearch, enter `meilisearch --no-analytics ` at root directory
-3. Enter `npm start` at root directory to start the whole application
+3. Enter `npm start` in website/frontend to start the whole application

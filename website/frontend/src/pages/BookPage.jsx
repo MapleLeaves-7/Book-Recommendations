@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { BookCard } from '../components';
 import bookService from '../services/books';
 
-export function BookResult() {
+export function BookPage() {
   const { id } = useParams(); // get bookID from url parameter
   const [currentBook, setCurrentBook] = useState(null);
   const [similarBooks, setSimilarBooks] = useState(null);

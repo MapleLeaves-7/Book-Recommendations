@@ -1,2 +1,2 @@
 export * from './Main';
-export * from './BookResult';
+export * from './BookPage';

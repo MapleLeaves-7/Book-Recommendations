@@ -2,7 +2,12 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        arvo: ['Arvo', 'sans-serif'],
+        titillium: ['Titillium Web', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

@@ -1,42 +1,26 @@
-import { useEffect, useState } from 'react';
-import { BookCard } from '../components';
-
-import searchService from '../services/search';
-const { index } = searchService;
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function Main() {
   const [searchedWord, setSearch] = useState('');
-  const [searchResults, setResults] = useState([]);
+  const navigate = useNavigate();
+  const submitSearch = event => {
+    event.preventDefault();
 
-  useEffect(() => {
-    // create and call scoped async function
-    (async function () {
-      const search = await index.search(searchedWord);
-      setResults(search.hits);
-    })();
-  }, [searchedWord]);
+    navigate(`/search/${searchedWord}`, { replace: true });
+  };
 
   return (
     <div>
-      <input
-        name="Search"
-        type="text"
-        value={searchedWord}
-        onChange={({ target }) => setSearch(target.value)}
-      />
-      <div>
-        <h1>searched results</h1>
-        {searchResults.map(result => (
-          <BookCard
-            key={result.id}
-            id={result.id}
-            link={result.link}
-            title={result.title}
-            description={result.description}
-            authors={result.authors}
-          />
-        ))}
-      </div>
+      <form onSubmit={submitSearch}>
+        <input
+          name="Search"
+          type="text"
+          value={searchedWord}
+          onChange={({ target }) => setSearch(target.value)}
+        />
+        <button type="submit">search</button>
+      </form>
     </div>
   );
 }

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { BookCard } from '../components';
 
 import searchService from '../services/search';
 const { index } = searchService;
 
 export function SearchResults() {
-  const { query } = useParams;
-  const [searchedWord, setSearch] = useState(query);
+  const location = useLocation();
+  const initialQuery = location.state;
+  const [searchedWord, setSearch] = useState(initialQuery);
   const [searchResults, setResults] = useState([]);
 
   useEffect(() => {

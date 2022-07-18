@@ -11,8 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/book/:id" element={<BookPage />} />
-          <Route path="/search" element={<Main />} />
-          <Route path="/search/:query" element={<SearchResults />} />
+          <Route path="/search" element={<SearchResults />} />
         </Routes>
       </Router>
     </div>

@@ -7,7 +7,7 @@ export function Main() {
   const submitSearch = event => {
     event.preventDefault();
 
-    navigate(`/search/${searchedWord}`, { replace: true });
+    navigate(`/search/${searchedWord}`);
   };
 
   return (

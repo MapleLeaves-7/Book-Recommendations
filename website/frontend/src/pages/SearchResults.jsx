@@ -7,7 +7,7 @@ const { index } = searchService;
 
 export function SearchResults() {
   const location = useLocation();
-  const initialQuery = location.state;
+  let initialQuery = location.state ? location.state : '';
   const [searchedWord, setSearch] = useState(initialQuery);
   const [searchResults, setResults] = useState([]);
 

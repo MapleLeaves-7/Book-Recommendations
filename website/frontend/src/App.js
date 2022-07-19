@@ -5,8 +5,10 @@ function App() {
   return (
     <div>
       <Router>
-        <nav>
-          <Link to="/">SimilarBookSearch</Link>
+        <nav className="py-4 text-white font-arvo bg-banner">
+          <Link className="pl-6 text-xl" to="/">
+            SIMILARSearch
+          </Link>
         </nav>
         <Routes>
           <Route path="/" element={<Main />} />

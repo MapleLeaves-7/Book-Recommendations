@@ -23,11 +23,11 @@ export function Main() {
             type="text"
             value={searchedWord}
             onChange={({ target }) => setSearch(target.value)}
-            className="w-10/12 px-3 py-1 border-transparent rounded-lg shadow-search"
+            className="w-10/12 px-3 py-1 border-transparent rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-within:outline-2"
           />
           <button
             type="submit"
-            className="w-32 py-1 text-white rounded-md shadow-button bg-button"
+            className="w-32 py-1 text-white rounded-md shadow-button bg-green-primary"
           >
             Search
           </button>

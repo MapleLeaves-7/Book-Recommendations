@@ -11,7 +11,7 @@ module.exports = {
         banner: '#CB997E',
         bg: '#FFFEF5',
         'off-white': '#FEFEFE',
-        button: '#A5A58D',
+        'green-primary': '#A5A58D',
       },
       boxShadow: {
         button: '2px 2px 2px rgba(0, 0, 0, 0.1)',

@@ -20,12 +20,9 @@ export function SearchBar() {
         type="text"
         value={searchedWord}
         onChange={({ target }) => setSearch(target.value)}
-        className="w-10/12 px-3 py-1 border-transparent rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-within:outline-2"
+        className="w-10/12 search-bar"
       />
-      <button
-        type="submit"
-        className="w-32 py-1 text-white rounded-md shadow-button bg-green-primary"
-      >
+      <button type="submit" className="search-button">
         Search
       </button>
     </form>

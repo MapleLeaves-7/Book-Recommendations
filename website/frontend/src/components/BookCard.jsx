@@ -19,7 +19,7 @@ export function BookCard({ id, title, authors, img }) {
         className="flex flex-col items-center text-center"
       >
         <img src={img} alt={title} className="w-[150px] h-56 rounded-md" />
-        <h2 className="mt-1 text-xl font-bold">{title}</h2>
+        <h3 className="mt-1 text-xl font-bold">{title}</h3>
         <p>
           by <span className="italic">{authors_display}</span>
         </p>

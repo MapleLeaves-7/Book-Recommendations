@@ -13,8 +13,13 @@
 
 @layer components {
   h2 {
-    @apply ml-4 text-lg font-bold font-arvo;
+    @apply text-lg font-bold font-arvo;
   }
+
+  .container-lg {
+    @apply w-10/12 max-w-5xl;
+  }
+
   .search-bar {
     @apply px-3 py-1 rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2;
   }

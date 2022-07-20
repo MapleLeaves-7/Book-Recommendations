@@ -19,6 +19,9 @@ module.exports = {
         'sub-card': '0px 4px 15px rgba(0, 0, 0, 0.20)',
         search: '0px 3px 5px 3px rgba(0, 0, 0, 0.20)',
       },
+      gridTemplateColumns: {
+        fit: 'repeat(auto-fit, minmax(250px, 1fr))',
+      },
     },
   },
   plugins: [],

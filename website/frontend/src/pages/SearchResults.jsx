@@ -31,7 +31,9 @@ export function SearchResults() {
 
   return (
     <div className="flex justify-center">
+      {/* Container for all content in page */}
       <div className="flex flex-col items-center w-10/12 max-w-5xl ">
+        {/* Section for Search Bar */}
         <form
           onSubmit={submitSearch}
           className="flex items-center w-full gap-4 mt-8 mb-8"
@@ -48,6 +50,7 @@ export function SearchResults() {
           </button>
         </form>
 
+        {/* Section for Search Results */}
         <div className="w-full">
           <h2>Search results</h2>
           <div className="grid grid-cols-fit">

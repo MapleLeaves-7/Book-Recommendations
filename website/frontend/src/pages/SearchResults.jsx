@@ -53,10 +53,9 @@ export function SearchResults() {
           <BookCard
             key={result.id}
             id={result.id}
-            link={result.link}
             title={result.title}
-            description={result.description}
             authors={result.authors}
+            img={result.book_cover}
           />
         ))}
       </div>

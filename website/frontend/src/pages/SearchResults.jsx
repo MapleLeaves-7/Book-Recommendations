@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { BookCard } from '../components';
+import { BookCardResults } from '../components';
 
 import searchService from '../services/search';
 const { index } = searchService;
@@ -51,20 +51,7 @@ export function SearchResults() {
         </form>
 
         {/* Section for Search Results */}
-        <div className="w-full">
-          <h2 className="pb-3">Search results</h2>
-          <div className="grid gap-4 grid-cols-fit">
-            {searchResults.map(result => (
-              <BookCard
-                key={result.id}
-                id={result.id}
-                title={result.title}
-                authors={result.authors}
-                img={result.book_cover}
-              />
-            ))}
-          </div>
-        </div>
+        <BookCardResults title={'Search results'} books={searchResults} />
       </div>
     </div>
   );

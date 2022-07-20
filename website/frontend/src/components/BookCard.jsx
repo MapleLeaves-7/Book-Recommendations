@@ -13,7 +13,7 @@ export function BookCard({ id, title, authors, img }) {
   }
 
   return (
-    <div className="flex flex-col justify-center px-2 py-2 m-4 rounded-md bg-off-white w-52 h-80 shadow-sub-card font-titillium ">
+    <div className="flex flex-col justify-center px-2 py-2 rounded-md bg-off-white w-52 h-80 shadow-sub-card font-titillium ">
       <a
         href={`/book/${id}`}
         className="flex flex-col items-center text-center"

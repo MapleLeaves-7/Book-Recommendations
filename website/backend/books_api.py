@@ -46,7 +46,6 @@ def get_similar_books(book_id):
     with Session.begin() as session:
         book = session.query(Book).filter(Book.id == book_id).first()
         similar_book_ids = [book.similar_book_id for book in book.similar_books]
-        print(similar_book_ids)
         for similar_book_id in similar_book_ids:
             similar_book = session.query(Book).filter(Book.id == similar_book_id).first()
             if similar_book:

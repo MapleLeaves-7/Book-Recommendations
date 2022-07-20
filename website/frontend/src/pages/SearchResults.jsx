@@ -32,7 +32,7 @@ export function SearchResults() {
   return (
     <div className="flex justify-center">
       {/* Container for all content in page */}
-      <div className="flex flex-col items-center w-10/12 max-w-5xl ">
+      <div className="flex flex-col items-center container-lg">
         {/* Section for Search Bar */}
         <form
           onSubmit={submitSearch}
@@ -52,8 +52,8 @@ export function SearchResults() {
 
         {/* Section for Search Results */}
         <div className="w-full">
-          <h2>Search results</h2>
-          <div className="grid grid-cols-fit">
+          <h2 className="pb-3">Search results</h2>
+          <div className="grid gap-4 grid-cols-fit">
             {searchResults.map(result => (
               <BookCard
                 key={result.id}

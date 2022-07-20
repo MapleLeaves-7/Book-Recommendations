@@ -12,6 +12,9 @@
 }
 
 @layer components {
+  h2 {
+    @apply ml-4 text-lg font-bold font-arvo;
+  }
   .search-bar {
     @apply px-3 py-1 rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2;
   }

@@ -49,7 +49,7 @@ export function SearchResults() {
         </form>
 
         <div className="w-full">
-          <h2 className="ml-4 text-lg font-bold font-arvo">Search results</h2>
+          <h2>Search results</h2>
           <div className="grid grid-cols-fit">
             {searchResults.map(result => (
               <BookCard

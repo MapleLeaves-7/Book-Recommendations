@@ -10,3 +10,13 @@
     @apply bg-bg;
   }
 }
+
+@layer components {
+  .search-bar {
+    @apply px-3 py-1 rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2;
+  }
+
+  .search-button {
+    @apply w-32 py-1 text-white rounded-md shadow-button bg-green-primary;
+  }
+}

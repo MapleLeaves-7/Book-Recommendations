@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BookCard } from '../components';
 
@@ -7,26 +7,49 @@ const { index } = searchService;
 
 export function SearchResults() {
   const location = useLocation();
-  let initialQuery = location.state ? location.state : '';
+  const initialQuery = location.state ? location.state : '';
   const [searchedWord, setSearch] = useState(initialQuery);
   const [searchResults, setResults] = useState([]);
 
+  // load the search results when the page is first loaded
   useEffect(() => {
     // create and call scoped async function
+    (async function () {
+      const search = await index.search(initialQuery);
+      setResults(search.hits);
+    })();
+  }, [initialQuery]);
+
+  // load the search results when the search is submitted
+  const submitSearch = event => {
+    event.preventDefault();
     (async function () {
       const search = await index.search(searchedWord);
       setResults(search.hits);
     })();
-  }, [searchedWord]);
+  };
 
   return (
     <div>
-      <input
-        name="Search"
-        type="text"
-        value={searchedWord}
-        onChange={({ target }) => setSearch(target.value)}
-      />
+      <form
+        onSubmit={submitSearch}
+        className="flex flex-col items-center w-full gap-4"
+      >
+        <input
+          name="Search"
+          type="text"
+          value={searchedWord}
+          onChange={({ target }) => setSearch(target.value)}
+          className="w-10/12 px-3 py-1 border-transparent rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-within:outline-2"
+        />
+        <button
+          type="submit"
+          className="w-32 py-1 text-white rounded-md shadow-button bg-green-primary"
+        >
+          Search
+        </button>
+      </form>
+
       <div>
         <h1>searched results</h1>
         {searchResults.map(result => (
@@ -43,3 +66,11 @@ export function SearchResults() {
     </div>
   );
 }
+
+//   useEffect(() => {
+//     // create and call scoped async function
+//     (async function () {
+//       const search = await index.search(searchedWord);
+//       setResults(search.hits);
+//     })();
+//   }, [searchedWord]);

@@ -16,8 +16,16 @@
     @apply text-lg font-bold font-arvo;
   }
 
+  .link {
+    @apply text-blue-500 cursor-pointer hover:underline hover:text-blue-600;
+  }
+
   .container-lg {
     @apply w-10/12 max-w-5xl;
+  }
+
+  .container-xl {
+    @apply w-10/12 max-w-7xl;
   }
 
   .search-bar {

@@ -16,7 +16,7 @@ export function BookCardResults({ title, books, noResultsMessage }) {
             />
           ))
         ) : (
-          <div className="font-arvo">{noResultsMessage}</div>
+          <div className="pt-3 font-arvo">{noResultsMessage}</div>
         )}
       </div>
     </div>

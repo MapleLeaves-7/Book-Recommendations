@@ -35,7 +35,7 @@ export function BookPage() {
             <img
               src={currentBook.book_cover}
               alt={currentBook.title}
-              className="w-60 h-80"
+              className="rounded-sm shadow-lg w-60 h-80"
             />
             {/* Section for book text metadata */}
             <div className="pl-10">

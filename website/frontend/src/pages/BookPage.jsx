@@ -28,10 +28,10 @@ export function BookPage() {
 
   if (currentBook) {
     return (
-      <div className="flex justify-center pt-8">
+      <div className="flex justify-center">
         <div className="container-xl">
           {/* Section for all book metadata */}
-          <div className="flex pb-12 font-titillium">
+          <div className="flex pt-2 pb-12 font-titillium">
             <img
               src={currentBook.book_cover}
               alt={currentBook.title}

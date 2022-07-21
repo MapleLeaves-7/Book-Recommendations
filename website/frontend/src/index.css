@@ -21,11 +21,11 @@
   }
 
   .container-lg {
-    @apply w-10/12 max-w-5xl;
+    @apply w-10/12 max-w-5xl pt-8 pb-10;
   }
 
   .container-xl {
-    @apply w-10/12 max-w-7xl;
+    @apply w-10/12 pt-8 pb-10 max-w-7xl;
   }
 
   .search-bar {

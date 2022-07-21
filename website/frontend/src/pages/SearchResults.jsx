@@ -51,7 +51,11 @@ export function SearchResults() {
         </form>
 
         {/* Section for Search Results */}
-        <BookCardResults title={'Search results'} books={searchResults} />
+        <BookCardResults
+          title={'Search results'}
+          books={searchResults}
+          noResultsMessage="Sorry, I could not find the book you were looking for."
+        />
       </div>
     </div>
   );

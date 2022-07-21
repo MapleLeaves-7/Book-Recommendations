@@ -36,7 +36,7 @@ export function SearchResults() {
         {/* Section for Search Bar */}
         <form
           onSubmit={submitSearch}
-          className="flex items-center w-full gap-4 mt-8 mb-8"
+          className="flex items-center w-full gap-4 mb-8"
         >
           <input
             name="Search"

@@ -1,13 +1,11 @@
+import bookUtils from '../utils/book';
+
 export function BookCard({ id, title, authors, img }) {
   if (title.length >= 29) {
     title = title.slice(0, 29) + '...';
   }
 
-  let authors_display = '';
-  for (let author of authors) {
-    authors_display += `${author.name}, `;
-  }
-  authors_display = authors_display.slice(0, authors_display.length - 2);
+  let authors_display = bookUtils.getAuthorDisplay(authors);
   if (title.length + authors_display.length > 52) {
     authors_display = authors_display.slice(0, 21) + '...';
   }

@@ -5,7 +5,7 @@ export function BookCardResults({ title, books, noResultsMessage }) {
     <div className="w-full">
       <h2 className="pb-3">{title}</h2>
       <div className="grid gap-4 grid-cols-fit">
-        {books.length > 1 ? (
+        {books.length > 0 ? (
           books.map(result => (
             <BookCard
               key={result.id}

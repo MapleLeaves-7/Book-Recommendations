@@ -48,16 +48,22 @@ export function BookPage() {
               </p>
               <p className="text-[1.0625rem] pb-2">
                 {showFullDescription ? longDescription : shortDescription}{' '}
-                <spa className="text-gray-500">
-                  (
-                  <span
-                    onClick={() => setShowFullDescription(!showFullDescription)}
-                    className="link"
-                  >
-                    {showFullDescription ? 'less' : 'more'}
+                {longDescription === shortDescription ? (
+                  <></>
+                ) : (
+                  <span className="text-gray-500">
+                    {showFullDescription ? '(' : '...('}
+                    <span
+                      onClick={() =>
+                        setShowFullDescription(!showFullDescription)
+                      }
+                      className="link"
+                    >
+                      {showFullDescription ? 'less' : 'more'}
+                    </span>
+                    )
                   </span>
-                  )
-                </spa>
+                )}
               </p>
               <p>
                 Reference:{' '}

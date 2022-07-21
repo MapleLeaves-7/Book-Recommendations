@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BookCard } from '../components';
+import { BookCardResults } from '../components';
 import bookService from '../services/books';
+import bookUtils from '../utils/book';
 
 export function BookPage() {
   const { id } = useParams(); // get bookID from url parameter
   const [currentBook, setCurrentBook] = useState(null);
   const [similarBooks, setSimilarBooks] = useState(null);
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [longDescription, setLongDescription] = useState('');
+  const [shortDescription, setShortDescription] = useState('');
 
   useEffect(() => {
     const setBookData = async id => {
@@ -14,33 +18,59 @@ export function BookPage() {
       const newSimilarBooks = await bookService.getSimilarBooks(id);
       setCurrentBook(newCurrBook);
       setSimilarBooks(newSimilarBooks);
+      setLongDescription(newCurrBook.description);
+      setShortDescription(
+        bookUtils.getShortDescription(newCurrBook.description)
+      );
     };
     setBookData(id);
   }, [id]);
 
   if (currentBook) {
     return (
-      <div>
-        <h1>{currentBook.title}</h1>
-        <ul>
-          {currentBook.authors.map(author => (
-            <li key={author.link}>{author.name}</li>
-          ))}
-        </ul>
-        <a href={currentBook.link}>Goodreads Link: {currentBook.link}</a>
-        <p>Description: {currentBook.description}</p>
-        <h2>Similar Books</h2>
-        {similarBooks.length > 0 &&
-          similarBooks.map(result => (
-            <BookCard
-              key={result.id}
-              id={result.id}
-              link={result.link}
-              title={result.title}
-              description={result.description}
-              authors={result.authors}
+      <div className="flex justify-center pt-8">
+        <div className="container-xl">
+          {/* Section for all book metadata */}
+          <div className="flex pb-12 font-titillium">
+            <img
+              src={currentBook.book_cover}
+              alt={currentBook.title}
+              className="w-60 h-80"
             />
-          ))}
+            {/* Section for book text metadata */}
+            <div className="pl-10">
+              <h1 className="text-3xl font-bold">{currentBook.title}</h1>
+              <p className="mb-3 text-lg">
+                by{' '}
+                <span className="italic">
+                  {bookUtils.getAuthorDisplay(currentBook.authors)}
+                </span>
+              </p>
+              <p className="text-[1.0625rem] pb-2">
+                {showFullDescription ? longDescription : shortDescription}{' '}
+                <spa className="text-gray-500">
+                  (
+                  <span
+                    onClick={() => setShowFullDescription(!showFullDescription)}
+                    className="link"
+                  >
+                    {showFullDescription ? 'less' : 'more'}
+                  </span>
+                  )
+                </spa>
+              </p>
+              <p>
+                Reference:{' '}
+                <a href={currentBook.link} className="link">
+                  {currentBook.link}
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* Section for Similar Books */}
+          <BookCardResults title={'Similar Books'} books={similarBooks} />
+        </div>
       </div>
     );
   }

@@ -69,7 +69,11 @@ export function BookPage() {
           </div>
 
           {/* Section for Similar Books */}
-          <BookCardResults title={'Similar Books'} books={similarBooks} />
+          <BookCardResults
+            title={'Similar Books'}
+            books={similarBooks}
+            noResultsMessage="Sorry... I could not find any other similar books. Your book is unique!"
+          />
         </div>
       </div>
     );

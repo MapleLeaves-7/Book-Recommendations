@@ -55,3 +55,7 @@ def get_similar_books(book_id):
                 similar_book_dict["authors"] = [Author.as_dict(author) for author in book.authors]
                 similar_books.append(similar_book_dict)
     return jsonify(similar_books)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)

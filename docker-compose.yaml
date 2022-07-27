@@ -1,0 +1,17 @@
+version: '3.3'
+services:
+  db:
+    image: postgres:13-alpine
+    restart: always
+    ports:
+      - '54322:5432'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: books
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+    driver: local

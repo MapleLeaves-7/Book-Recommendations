@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "meilisearch": "^0.26.0"
+  },
+  "type": "module"
+}

@@ -7,5 +7,6 @@ venv/
 
 **__pycache__/
 
-# ignore meilisearch data
-data.ms
+node_modules
+
+data.ms/

@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Arvo';
+  src: url(./Arvo/Arvo-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Arvo';
+  src: url(./Arvo/Arvo-Bold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  src: url(./Titillium_Web/TitilliumWeb-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  src: url(./Titillium_Web/TitilliumWeb-Bold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  src: url(./Titillium_Web/TitilliumWeb-Italic.ttf);
+  font-style: italic;
+}

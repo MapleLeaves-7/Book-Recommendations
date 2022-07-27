@@ -11,6 +11,17 @@ services:
       POSTGRES_DB: books
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+  website-backend:
+    build:
+      context: ./
+      dockerfile: ./website/backend/Dockerfile
+    volumes:
+      - ./website/backend:/usr/src/app
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    command: ['./wait-for-it.sh', 'db:5432', '--', 'python', 'books_api.py']
 
 volumes:
   pgdata:

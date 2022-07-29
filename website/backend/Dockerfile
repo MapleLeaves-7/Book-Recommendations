@@ -18,5 +18,3 @@ RUN mkdir -p db
 COPY ./db/models.py ./db/
 # copy config for postgres docker image that will be run
 COPY ./website/backend/db_config.py ./db/
-
-# ENTRYPOINT [ "python", "books_api.py" ]

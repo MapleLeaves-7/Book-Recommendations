@@ -7,14 +7,16 @@ RUN apt-get update \
     && apt-get -y install libpq-dev gcc \
     && pip install psycopg2
 
+# copy and download python package requirements
 COPY ./website/backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
+# copy main code
 COPY ./website/backend .
 
 RUN mkdir -p db
-# sqlalchemy model
+# copy sqlalchemy model
 COPY ./db/models.py ./db/
-# config for postgres docker image that will be run
+# copy config for postgres docker image that will be run
 COPY ./website/backend/db_config.py ./db/
 
 # ENTRYPOINT [ "python", "books_api.py" ]

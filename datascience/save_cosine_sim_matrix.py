@@ -8,7 +8,7 @@ import nltk
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
-from sqlalchemy import and_
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import sessionmaker
 
 # add parent directory to python path
@@ -58,63 +58,85 @@ def get_cosine_sim(tfidf_matrix):
     return cosine_sim
 
 
-with Session.begin() as session:
-    ps = PorterStemmer()
-    df = pd.read_sql(session.query(Book).filter(Book.description != None).limit(100).statement, session.bind)
+def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
+    """
+    save_all:
+        If true, similarity of all the books will be calculated and num_books will be ignored.
+        If False, similarity of number of books specified in num_books will be calculated.
+    output_matrix: If true, matrix will be saved as numpy file under data/ folder. 
+    """
+    with Session.begin() as session:
 
-    # update numpy index in database
-    for index, row in df.iterrows():
-        db_id = row['id']
-        book = session.query(Book).filter(Book.id == db_id).first()
-        if book:
-            book.np_id = index
-            session.add(book)
+        ps = PorterStemmer()
+        if save_all:
+            df = pd.read_sql(session.query(Book).filter(
+                or_(Book.has_all_data,
+                    and_(Book.title != None, Book.description != None, Book.has_author == True)
+                    )).statement, session.bind)
+        else:
+            df = pd.read_sql(session.query(Book).filter(
+                or_(Book.has_all_data,
+                    and_(Book.title != None, Book.description != None, Book.has_author == True)
+                    )).limit(num_books).statement, session.bind)
 
-    for idx, row in df.iterrows():
-        cleaned_description = []
-        for word in word_tokenize(row['description']):
-            # if word not in stop_words:
-            cleaned_description.append(ps.stem(word))
-        cleaned_description = " ".join(cleaned_description)
-        df.loc[idx, 'description'] = cleaned_description
+        # update numpy index in database
+        for index, row in df.iterrows():
+            db_id = row['id']
+            book = session.query(Book).filter(Book.id == db_id).first()
+            if book:
+                book.np_id = index
+                session.add(book)
 
-    description = df['description']
+        for idx, row in df.iterrows():
+            cleaned_description = []
+            for word in word_tokenize(row['description']):
+                # if word not in stop_words:
+                cleaned_description.append(ps.stem(word))
+            cleaned_description = " ".join(cleaned_description)
+            df.loc[idx, 'description'] = cleaned_description
 
-    # create TfidfVectorizer object
-    # modify token pattern so that tokens must contain at least one letter
-    vectorizer = TfidfVectorizer(token_pattern=u'(?ui)\\b\\w*[a-z]+\\w*\\b')
+        description = df['description']
 
-    # generate matrix of word vectors
-    tfidf_matrix = vectorizer.fit_transform(description)
+        # create TfidfVectorizer object
+        # modify token pattern so that tokens must contain at least one letter
+        vectorizer = TfidfVectorizer(token_pattern=u'(?ui)\\b\\w*[a-z]+\\w*\\b')
 
-    # feature_names = vectorizer.get_feature_names_out()
-    # dense = tfidf_matrix.todense()
-    # denselist = dense.tolist()
-    # df = pd.DataFrame(denselist, columns=feature_names)
-    # print(df)
+        # generate matrix of word vectors
+        tfidf_matrix = vectorizer.fit_transform(description)
 
-    cosine_sim_matrix = get_linear_kernel(tfidf_matrix)
+        # feature_names = vectorizer.get_feature_names_out()
+        # dense = tfidf_matrix.todense()
+        # denselist = dense.tolist()
+        # df = pd.DataFrame(denselist, columns=feature_names)
+        # print(df)
 
-    for np_id1, row in enumerate(cosine_sim_matrix):
-        # get book with the current np_id1
-        current_book = session.query(Book).filter(Book.np_id == np_id1).first()
+        cosine_sim_matrix = get_linear_kernel(tfidf_matrix)
 
-        # sort based on similarity
-        cosine_sim_row = list(enumerate(cosine_sim_matrix[np_id1].tolist()))
-        cosine_sim_row.sort(key=lambda x: x[1], reverse=True)
-        # get 10 most similar books using cosine_sim_matrix
-        for np_id2, sim in cosine_sim_row[1:11]:
-            # skip those that have similarity 0
-            if sim == 0:
-                continue
+        for np_id1, row in enumerate(cosine_sim_matrix):
+            # get book with the current np_id1
+            current_book = session.query(Book).filter(Book.np_id == np_id1).first()
 
-            similar_book = session.query(Book).filter(Book.np_id == np_id2).first()
-            new_book_similar_book = BookSimilarBook(current_book_id=current_book.id, similar_book_id=similar_book.id)
-            exists_book_similar_book = session.query(BookSimilarBook).filter(and_(BookSimilarBook.current_book_id == current_book.id,
-                                                                                  BookSimilarBook.similar_book_id == similar_book.id)).first()
-            if exists_book_similar_book:
-                new_book_similar_book = exists_book_similar_book
-            new_book_similar_book.sim = sim
-            session.add(new_book_similar_book)
+            # sort based on similarity
+            cosine_sim_row = list(enumerate(cosine_sim_matrix[np_id1].tolist()))
+            cosine_sim_row.sort(key=lambda x: x[1], reverse=True)
+            # get 10 most similar books using cosine_sim_matrix
+            for np_id2, sim in cosine_sim_row[1:11]:
+                # skip those that have similarity 0
+                if sim == 0:
+                    continue
 
-    np.save('./data/cosine_sim_matrix_stemmed', cosine_sim_matrix)
+                similar_book = session.query(Book).filter(Book.np_id == np_id2).first()
+                new_book_similar_book = BookSimilarBook(current_book_id=current_book.id, similar_book_id=similar_book.id)
+                exists_book_similar_book = session.query(BookSimilarBook).filter(and_(BookSimilarBook.current_book_id == current_book.id,
+                                                                                      BookSimilarBook.similar_book_id == similar_book.id)).first()
+                if exists_book_similar_book:
+                    new_book_similar_book = exists_book_similar_book
+                new_book_similar_book.sim = sim
+                session.add(new_book_similar_book)
+
+        if output_matrix:
+            np.save('./data/cosine_sim_matrix_stemmed', cosine_sim_matrix)
+
+
+if __name__ == "__main__":
+    save_cosine_sim_matrix()

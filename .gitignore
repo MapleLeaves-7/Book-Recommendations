@@ -11,3 +11,7 @@ node_modules
 
 # ignore meilisearch cache
 data.ms/
+
+# ignore docker mounted volumes
+**pgdata/
+**meili_data/

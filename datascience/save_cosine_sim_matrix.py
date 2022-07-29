@@ -16,7 +16,7 @@ parent_dir = Path(__file__).parents[1]
 sys.path.insert(0, str(parent_dir))
 
 # add ../nltk_data to nltk path
-nltk.data.path.append(str(parent_dir) + "/nltk_data")
+nltk.data.path.append("./nltk_data")
 from nltk.stem import PorterStemmer  # nopep8 (disable autopep8 formatting for this line)
 from nltk.tokenize import word_tokenize  # nopep8 (disable autopep8 formatting for this line)
 

@@ -48,12 +48,16 @@ def get_processed_books(num_books=3000, get_all=False):
     return all_books
 
 
-def index_data():
+def index_data(num_books=3000, get_all=False, batch_num=500):
     """
-    Indexes and then returns processed books
+    Indexes number of books specified into meilisearch in batches.
     """
-    all_books = get_processed_books()
-    client.index("books").add_documents(all_books)
+    all_books = get_processed_books(num_books=num_books, get_all=get_all)
+    i = 0
+    while i < len(all_books):
+        client.index("books").add_documents(all_books[i:i+batch_num])
+        i += batch_num
+
     return all_books
 
 

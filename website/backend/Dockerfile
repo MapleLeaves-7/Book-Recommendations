@@ -11,4 +11,10 @@ COPY ./website/backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY ./website/backend .
 
+RUN mkdir -p db
+# sqlalchemy model
+COPY ./db/models.py ./db/
+# config for postgres docker image that will be run
+COPY ./website/backend/db_config.py ./db/
+
 # ENTRYPOINT [ "python", "books_api.py" ]

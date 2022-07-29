@@ -68,6 +68,7 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
     with Session.begin() as session:
 
         ps = PorterStemmer()
+        print("retrieving books from database...")
         if save_all:
             df = pd.read_sql(session.query(Book).filter(
                 or_(Book.has_all_data,
@@ -79,6 +80,7 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
                     and_(Book.title != None, Book.description != None, Book.has_author == True)
                     )).limit(num_books).statement, session.bind)
 
+        print("updating numpy index in database...")
         # update numpy index in database
         for index, row in df.iterrows():
             db_id = row['id']
@@ -87,6 +89,7 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
                 book.np_id = index
                 session.add(book)
 
+        print("cleaning description...")
         for idx, row in df.iterrows():
             cleaned_description = []
             for word in word_tokenize(row['description']):
@@ -101,6 +104,7 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
         # modify token pattern so that tokens must contain at least one letter
         vectorizer = TfidfVectorizer(token_pattern=u'(?ui)\\b\\w*[a-z]+\\w*\\b')
 
+        print("getting tfidf matrix...")
         # generate matrix of word vectors
         tfidf_matrix = vectorizer.fit_transform(description)
 
@@ -110,8 +114,10 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
         # df = pd.DataFrame(denselist, columns=feature_names)
         # print(df)
 
+        print("calculating cosine similarity...")
         cosine_sim_matrix = get_linear_kernel(tfidf_matrix)
 
+        print("saving similar books into database...")
         for np_id1, row in enumerate(cosine_sim_matrix):
             # get book with the current np_id1
             current_book = session.query(Book).filter(Book.np_id == np_id1).first()
@@ -134,6 +140,7 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
                 new_book_similar_book.sim = sim
                 session.add(new_book_similar_book)
 
+        print("outputting numpy matrix...")
         if output_matrix:
             np.save('./data/cosine_sim_matrix_stemmed', cosine_sim_matrix)
 

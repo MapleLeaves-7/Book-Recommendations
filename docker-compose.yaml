@@ -22,6 +22,19 @@ services:
     depends_on:
       - db
     command: ['./wait-for-it.sh', 'db:5432', '--', 'python', 'books_api.py']
+  website-frontend:
+    image: node:18
+    user: node
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./website/frontend:/home/node/app
+    expose:
+      - 3000
+    ports:
+      - '3000:3000'
+    command: 'npm start'
 
 volumes:
   pgdata:

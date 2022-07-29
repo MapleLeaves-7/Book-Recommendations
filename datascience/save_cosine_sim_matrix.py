@@ -8,7 +8,7 @@ import nltk
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, update
 from sqlalchemy.orm import sessionmaker
 
 # add parent directory to python path
@@ -63,9 +63,11 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
     save_all:
         If true, similarity of all the books will be calculated and num_books will be ignored.
         If False, similarity of number of books specified in num_books will be calculated.
-    output_matrix: If true, matrix will be saved as numpy file under data/ folder. 
+    output_matrix: If true, matrix will be saved as numpy file under data/ folder.
     """
     with Session.begin() as session:
+        # reset all numpy_id values in book table to be NULL
+        session.execute(update(Book).values(np_id=None))
 
         ps = PorterStemmer()
         print("retrieving books from database...")

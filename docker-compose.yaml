@@ -21,8 +21,6 @@ services:
     build:
       context: ./
       dockerfile: ./website/backend/Dockerfile
-    volumes:
-      - ./website/backend:/usr/src/app
     ports:
       - 5000:5000
     depends_on:

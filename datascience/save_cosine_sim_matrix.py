@@ -129,10 +129,19 @@ def get_cosine_sim_matrix(get_all=False, num_books=100, output_matrix=True, save
         save_all_similar_books(cosine_sim_matrix=cosine_sim_matrix)
 
 
-def save_all_similar_books(cosine_sim_matrix):
+def save_all_similar_books(cosine_sim_matrix=None, file_name=None):
     """
     Get the cosine similarity matrix and save books similar to each book into database. 
+    If a filename is provided, it is assumed that it is a numpy dump of the cosine matrix data, and will be read from and used instead of the provided cosine_sim_matrix variable.
     """
+    if cosine_sim_matrix is None and file_name is None:
+        print("cosine similarity matrix (type: numpy array) or file name to numpy matrix must be provided")
+        return
+
+    if file_name:
+        print("reading from file provided...")
+        cosine_sim_matrix = np.load(file=file_name)
+
     print("saving similar books into database...")
     print(f"there are {len(cosine_sim_matrix)} books to save")
     for np_id, row in enumerate(cosine_sim_matrix):

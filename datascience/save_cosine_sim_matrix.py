@@ -158,6 +158,12 @@ def save_one_similar_books(current_np_id, cosine_sim_row):
         # get book with the current numpy id
         current_book = session.query(Book).filter(Book.np_id == current_np_id).first()
 
+        # check if similar books for this book have already been calculated and saved
+        exists_similar_books = session.query(BookSimilarBook).filter(BookSimilarBook.current_book_id == current_book.id).first()
+        if exists_similar_books:
+            print(f"similar books for book with id {current_book.id} have already been saved, skipping this book")
+            return
+
         print(f"saving similar books for book id: {current_book.id}")
         # sort based on similarity
         cosine_sim_row = list(enumerate(cosine_sim_row.tolist()))
@@ -170,11 +176,12 @@ def save_one_similar_books(current_np_id, cosine_sim_row):
 
             similar_book = session.query(Book).filter(Book.np_id == np_id2).first()
             new_book_similar_book = BookSimilarBook(current_book_id=current_book.id, similar_book_id=similar_book.id)
-            # check if a row mapping these 2 books already exists
-            exists_book_similar_book = session.query(BookSimilarBook).filter(and_(BookSimilarBook.current_book_id == current_book.id,
-                                                                                  BookSimilarBook.similar_book_id == similar_book.id)).first()
-            if exists_book_similar_book:
-                new_book_similar_book = exists_book_similar_book
+            # # check if a row mapping these 2 books already exists
+            # exists_book_similar_book = session.query(BookSimilarBook).filter(and_(BookSimilarBook.current_book_id == current_book.id,
+            #                                                                       BookSimilarBook.similar_book_id == similar_book.id)).first()
+            # if exists_book_similar_book:
+            #     # update row with new similarity
+            #     new_book_similar_book = exists_book_similar_book
             new_book_similar_book.sim = sim
             session.add(new_book_similar_book)
 

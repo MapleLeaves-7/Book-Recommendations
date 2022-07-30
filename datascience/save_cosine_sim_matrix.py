@@ -71,6 +71,10 @@ def get_cosine_sim_matrix(get_all=False, num_books=100, output_matrix=True, save
         # reset all numpy_id values in book table to be NULL
         session.execute(update(Book).values(np_id=None))
 
+        print("deleting all the rows from book_similar_book table...")
+        # delete all the rows from book_similar_book table
+        session.query(BookSimilarBook).delete()
+
         ps = PorterStemmer()
         print("retrieving books from database...")
         if get_all:

@@ -131,7 +131,7 @@ def save_cosine_sim_matrix(save_all=False, num_books=100, output_matrix=True):
             for np_id2, sim in cosine_sim_row[1:11]:
                 # skip those that have similarity 0
                 if sim == 0:
-                    continue
+                    break
 
                 similar_book = session.query(Book).filter(Book.np_id == np_id2).first()
                 new_book_similar_book = BookSimilarBook(current_book_id=current_book.id, similar_book_id=similar_book.id)

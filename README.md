@@ -29,8 +29,23 @@ cat postgres_backup.sql | docker exec -i <name-of-docker-container-for-psql> psq
 
 2. Index the meilisearch data into docker container
 
+Create a new python virtual environment
+
 ```
-python search/index_data.py
+python -m venv venv
+source venv/bin/activate
+```
+
+Download the requirements
+
+```
+python -m pip install -r requirements.txt
+```
+
+Run the script with the `--all` option.
+
+```
+python search/index_data.py -a
 ```
 
 # Development instructions

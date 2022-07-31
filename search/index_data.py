@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+import argparse
 
 import meilisearch
 from sqlalchemy.orm import sessionmaker
@@ -48,11 +49,14 @@ def get_processed_books(num_books=3000, get_all=False):
     return all_books
 
 
-def index_data(num_books=3000, get_all=False, batch_num=500):
+def index_data(index_all=False, num_books=500, batch_num=500):
     """
     Indexes number of books specified into meilisearch in batches.
+    index_all: If true, indexes all the books in database into meilisearch and num_books argument will be ignored.
+    num_books: Only used when index_all is False. Specifies the number of books to index into database
+    batch_num: Specifies the batch size of the books to be indexed.
     """
-    all_books = get_processed_books(num_books=num_books, get_all=get_all)
+    all_books = get_processed_books(num_books=num_books, get_all=index_all)
     i = 0
     while i < len(all_books):
         client.index("books").add_documents(all_books[i:i+batch_num])
@@ -62,4 +66,10 @@ def index_data(num_books=3000, get_all=False, batch_num=500):
 
 
 if __name__ == "__main__":
-    index_data()
+    parser = argparse.ArgumentParser(description='Index book data into meilisearch.')
+    parser.add_argument('-b', '--batch_num', type=int, default=500)
+    parser.add_argument('-n', '--num_books', type=int, default=500)
+    parser.add_argument('-a', '--all', type=bool, default=False)
+    args = parser.parse_args()
+
+    index_data(index_all=args.all, num_books=args.num_books, batch_num=args.batch_num)

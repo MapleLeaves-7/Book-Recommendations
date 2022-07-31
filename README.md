@@ -82,8 +82,8 @@ Download the requirements
 python -m pip install -r requirements.txt
 ```
 
-Run the script
+Run the script with the `--all` option.
 
 ```
-python search/index_data.py
+python search/index_data.py -a
 ```

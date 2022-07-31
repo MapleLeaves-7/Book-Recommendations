@@ -42,3 +42,33 @@ FLASK_ENV="development"
 1. To run the backend api, enter `flask run` at root directory
 2. To run meilisearch, enter `meilisearch --no-analytics ` at root directory
 3. Enter `npm start` in website/frontend to start the whole application
+
+# Set up
+
+Docker must first be installed and running on the host machine.
+
+To start the website, run the following command under the root directory.
+
+```
+docker-compose up
+```
+
+To shut down the website, run the following command under the root directory.
+
+```
+docker-compose down
+```
+
+On a brand new machine, the following steps must be done when the website is running. They only need to be done once.
+
+1. Save the postgres SQL data into docker container
+
+```
+cat postgres_backup.sql | docker exec -i <name-of-docker-container-for-psql> psql -U user books
+```
+
+2. Index the meilisearch data into docker container
+
+```
+python search/index_data.py
+```

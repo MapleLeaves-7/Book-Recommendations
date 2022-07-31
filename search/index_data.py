@@ -18,14 +18,25 @@ Session = sessionmaker(bind=engine)
 client = meilisearch.Client('http://127.0.0.1:7700')
 
 
-def get_processed_books():
+def get_processed_books(num_books=3000, get_all=False):
+    """
+    Gets books from database. 
+    If get_all is set to True, all the books will get retrieved and num_books will be ignored.
+    If get_all is set to False, number of books specified in num_books will be retrieved.
+    """
     all_books = []
     with Session.begin() as session:
         # get books which either have all data, or have title, description and author
-        books = session.query(Book).filter(
-            or_(Book.has_all_data,
-                and_(Book.title != None, Book.description != None, Book.has_author == True)
-                )).limit(100)
+        if get_all:
+            books = session.query(Book).filter(
+                or_(Book.has_all_data,
+                    and_(Book.title != None, Book.description != None, Book.has_author == True)
+                    )).all()
+        else:
+            books = session.query(Book).filter(
+                or_(Book.has_all_data,
+                    and_(Book.title != None, Book.description != None, Book.has_author == True)
+                    )).limit(num_books)
 
         for book in books:
             # convert sql book object to python dictionary format
@@ -37,12 +48,16 @@ def get_processed_books():
     return all_books
 
 
-def index_data():
+def index_data(num_books=3000, get_all=False, batch_num=500):
     """
-    Indexes and then returns processed books
+    Indexes number of books specified into meilisearch in batches.
     """
-    all_books = get_processed_books()
-    client.index("books").add_documents(all_books)
+    all_books = get_processed_books(num_books=num_books, get_all=get_all)
+    i = 0
+    while i < len(all_books):
+        client.index("books").add_documents(all_books[i:i+batch_num])
+        i += batch_num
+
     return all_books
 
 

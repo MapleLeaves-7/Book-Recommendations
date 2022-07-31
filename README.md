@@ -39,7 +39,7 @@ source venv/bin/activate
 Download the requirements
 
 ```
-python -m pip install -r requirements.txt
+python -m pip install -r search/requirements.txt
 ```
 
 Run the script with the `--all` option.

@@ -19,7 +19,7 @@ export function SearchBar() {
   const handleEnter = event => {
     event.preventDefault();
 
-    if (active >= 0 && active < results.length) {
+    if (active >= 0 && active < results.length && active != null) {
       let bookID = results[active].id;
       return navigate(`/book/${bookID}`);
     }

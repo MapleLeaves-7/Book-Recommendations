@@ -122,7 +122,7 @@ def get_cosine_sim_matrix(get_all=False, num_books=100):
     # print(df)
 
     print("calculating cosine similarity...")
-    cosine_sim_matrix = get_linear_kernel(tfidf_matrix)
+    cosine_sim_matrix = get_cosine_sim(tfidf_matrix)
 
     return cosine_sim_matrix
 

@@ -50,25 +50,55 @@ python search/index_data.py -a
 
 # Development instructions
 
-### Transferring SQL Data
+## Requirements
 
-When restoring books.dump into TablePlus database, set it as (--clean and --create)
+1. [Python](https://www.python.org/downloads/) 3.9 and above
+2. [Node.js](https://nodejs.org/en/download/) v16 and above
+3. [Meilisearch](https://docs.meilisearch.com/learn/getting_started/quick_start.html#setup-and-installation)
+4. [PostgreSQL](https://www.postgresql.org/download/) 13
 
-### Requirements
-
-meilisearch must be installed (https://docs.meilisearch.com/learn/getting_started/quick_start.html#setup-and-installation)
-
-using homebrew
+### Download python packages
 
 ```
-# Update brew and install Meilisearch
-brew update && brew install meilisearch
-
-# Launch Meilisearch
-meilisearch
+python -m venv venv
+source venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-### Environment variables
+### Download NPM packages
+
+```
+cd website/frontend
+npm install
+```
+
+## Restoring SQL Data
+
+Database sql dump is saved under `postgres_backup.sql` in root directory.
+
+To restore books data into database:
+
+```
+psql -U <username> -d books < postgres_backup.sql
+```
+
+## Index data into search engine
+
+Start the meilisearch server in root directory.
+
+```
+meilisearch --no-analytics
+```
+
+Run the script to index all the data.
+
+```
+python search/index_data.py --all
+```
+
+## Environment variables
+
+A package like [autoenv](https://github.com/hyperupcall/autoenv) can be used to set environment variables.
 
 ```
 HOSTNAME='localhost'
@@ -84,11 +114,28 @@ Optional:
 FLASK_ENV="development"
 ```
 
-### Running the entire application
+## Running entire application locally
 
-1. To run the backend api, enter `flask run` at root directory
-2. To run meilisearch, enter `meilisearch --no-analytics ` at root directory
-3. Enter `npm start` in website/frontend to start the whole application
+Running the application from root directory:
+
+1. Start backend api
+
+```
+flask run
+```
+
+2. Start Meilisearch server
+
+```
+meilisearch --no-analytics
+```
+
+3. Start website
+
+```
+cd website/frontend
+npm start
+```
 
 # Repository Structure and Contents
 
@@ -113,7 +160,7 @@ Files:
 
 Technologies used:
 
-1. [PostgreSQ](https://www.postgresql.org/): Relational Database used to save the data
+1. [PostgreSQL](https://www.postgresql.org/): Relational Database used to save the data
 2. [SQLAlchemy](https://www.sqlalchemy.org/): Object Relational Mapper (ORM) used to create the database and tables, as well as save new entries
 
 ## 2. Scraper

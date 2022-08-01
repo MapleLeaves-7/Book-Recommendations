@@ -170,7 +170,7 @@ def start_requests(self):
 
 The files relating to data science are in the `datascience` folder.
 
-Main script: `save_cosine_sim_matrix.py`
+### Main script: `save_cosine_sim_matrix.py`
 
 For each book, calculates the top 10 most similar books.
 
@@ -181,7 +181,7 @@ Techniques used:
 3. TF-IDF Vectors
 4. Cosine similarity
 
-Local testing: `output_local_cosine_sim.py`
+### Local testing: `output_local_cosine_sim.py`
 
 Used to see how well the model predicts similar books. Similar books recommended by the current algorithm is compared with the related books extracted from Gooreads. Comparing related books extracted from Goodreads with the current book should yield a higher similarity score than comparing a random book with the current book. Results are dumped out into a json file in the `data` folder.
 
@@ -191,7 +191,9 @@ The files relating to search are in the `search` folder.
 
 Search functionality was implemented using [meilisearch](https://docs.meilisearch.com/). When the meilisearch server is running, the `index_data.py` script is used to index the data from database into the search engine.
 
-Main script: `index_data.py`. It takes the following command line options:
+### Main script: `index_data.py`
+
+It takes the following command line options:
 
 1. `-a` or `--all`: Indexes all the books in the database.
 2. `-n NUM_BOOKS` or `--num_books NUM_BOOKS`: Specifies the number of books to index into search engine. This flag is ignored if `-a` flag is present
@@ -204,7 +206,9 @@ Example usage:
 python search/index_data.py --all -b 1000
 ```
 
-`output_local.py` indexes the data with default arguments into the search engine and outputs the indexed data as a json file.
+### Local testing: `output_local.py`
+
+Indexes the data with default arguments into the search engine and outputs the indexed data as a json file.
 
 ## 5. Website
 

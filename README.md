@@ -70,7 +70,7 @@ Files:
 
 ## 3. Datascience
 
-The files relating to data science are in the `datascience` folder
+The files relating to data science are in the `datascience` folder.
 
 Main script: `save_cosine_sim_matrix.py`
 
@@ -89,9 +89,11 @@ Used to see how well the model predicts similar books. Similar books recommended
 
 ## 4. Search
 
+The files relating to search are in the `search` folder.
+
 Search functionality was implemented using [meilisearch](https://docs.meilisearch.com/). When the meilisearch server is running, the `index_data.py` script is used to index the data from database into the search engine.
 
-The `index_data.py` script takes the following command line options:
+Main script: `index_data.py`. It takes the following command line options:
 
 1. `-a` or `--all`: Indexes all the books in the database.
 2. `-n NUM_BOOKS` or `--num_books NUM_BOOKS`: Specifies the number of books to index into search engine. This flag is ignored if `-a` flag is present

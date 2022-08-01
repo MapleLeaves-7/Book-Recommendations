@@ -85,6 +85,8 @@ Example usage:
 python search/index_data.py --all -b 1000
 ```
 
+`output_local.py` indexes the data with default arguments into the search engine and outputs the indexed data as a json file.
+
 ### Transferring SQL Data
 
 When restoring books.dump into TablePlus database, set it as (--clean and --create)

@@ -67,9 +67,9 @@ def index_data(index_all=False, num_books=500, batch_num=500):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Index book data into meilisearch.')
-    parser.add_argument('-b', '--batch_num', type=int, default=500)
-    parser.add_argument('-n', '--num_books', type=int, default=500)
     parser.add_argument('-a', '--all', action='store_true', dest='all')
+    parser.add_argument('-n', '--num_books', type=int, default=500)
+    parser.add_argument('-b', '--batch_num', type=int, default=500)
     args = parser.parse_args()
 
     index_data(index_all=args.all, num_books=args.num_books, batch_num=args.batch_num)

@@ -68,6 +68,23 @@ Files:
 1. `db_config.py` gets the credentials to connect to the local PostgreSQL database.
 2. `models.py` specifies the database schema using SQLAlchemy and is used by other files to communicate with the database.
 
+## 4. Search
+
+Search functionality was implemented using [meilisearch](https://docs.meilisearch.com/). When the meilisearch server is running, the `index_data.py` script is used to index the data from database into the search engine.
+
+The `index_data.py` script takes the following command line options:
+
+1. `-a` or `--all`: Indexes all the books in the database.
+2. `-n NUM_BOOKS` or `--num_books NUM_BOOKS`: Specifies the number of books to index into search engine. This flag is ignored if `-a` flag is present
+3. `-b BATCH_NUM` or `--batch_num BATCH_NUM`: Specifies the batch size to index the books with. Default is 500 books at a time.
+
+Example usage:
+
+```
+# Indexes all the books into the search engine, 1000 books at a time.
+python search/index_data.py --all -b 1000
+```
+
 ### Transferring SQL Data
 
 When restoring books.dump into TablePlus database, set it as (--clean and --create)

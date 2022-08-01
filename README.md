@@ -179,7 +179,7 @@ The following metadata for each book is saved:
 
 This scraper has been run and has extracted the metadata of the books from the list ["Books That Everyone Should Read At Least Once"](https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?"). The related books for each book have been saved into the database, and the metadata for some of them have been crawled. Currently, if the script is run, it will get the book links from the database that have not been crawled, and will crawl them.
 
-To run the books scraper (assuming you are in root directory):
+To run the books scraper from root directory:
 
 ```
 cd books_scraper

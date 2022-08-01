@@ -112,6 +112,34 @@ python search/index_data.py --all -b 1000
 
 `output_local.py` indexes the data with default arguments into the search engine and outputs the indexed data as a json file.
 
+## 5. Website
+
+The files relating to the website (frontend and backend) are in the `website` folder.
+
+### Frontend
+
+Languages used:
+
+- Javascript
+- HTML
+- CSS
+
+Technologies used:
+
+- React
+- Tailwind CSS
+
+### Backend
+
+Languages used:
+
+- Python
+
+Technologies used:
+
+- Flask
+- SQLAlchemy
+
 ### Transferring SQL Data
 
 When restoring books.dump into TablePlus database, set it as (--clean and --create)

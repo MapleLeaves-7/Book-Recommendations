@@ -74,11 +74,14 @@ The files relating to data science are in the `datascience` folder
 
 Main script: `save_cosine_sim_matrix.py`
 
-- Removes stop words and replace remaining words with their stemmed version
-- Converts the cleaned book description of each book into a vector using tf-idf
-- Computes the cosine similarity between the vectors
-- For each book, saves the 10 most similar books to the database.
-- If the option is set, function will output cosine similarity matrix as a numpy pickle into `data` folder.
+For each book, calculates the top 10 most similar books.
+
+Techniques used:
+
+1. Stemming
+2. Stop word removal
+3. TF-IDF Vectors
+4. Cosine similarity
 
 Local testing: `output_local_cosine_sim.py`
 

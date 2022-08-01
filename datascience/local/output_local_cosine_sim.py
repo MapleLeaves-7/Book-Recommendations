@@ -79,4 +79,3 @@ def compare_cosine_sim(matrix_filename, output_filename, max_row_iter=None):
 
 if __name__ == "__main__":
     compare_cosine_sim('../data/cosine_sim_matrix.npy', '../data/tfidf_comparision_base.json', 200)
-    # compare_cosine_sim('../data/cosine_sim_matrix_stemmed.npy', '../data/tfidf_comparision_base_stemmed.json', 200)

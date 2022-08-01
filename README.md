@@ -5,47 +5,40 @@ diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/ar
 
 # Deployment instructions
 
-Docker must first be installed and running on the host machine.
+Requirements:
 
-To start the website, run the following command under the root directory.
+1. Docker
+2. Python 3.9
+3. PostgreSQL 13
+
+## Starting the website
+
+1. Start the docker containers for the website and services from the root directory.
 
 ```
 docker-compose up
 ```
 
-To shut down the website, run the following command under the root directory.
+2. To shut down the website, run the following command under the root directory.
 
 ```
 docker-compose down
 ```
 
-On a brand new machine, the following steps must be done when the website is running. They only need to be done once.
+## Intial Setup (on a new machine)
 
-1. Save the postgres SQL data into docker container
+This step only needs to be done once on a new machine.
 
-```
-cat postgres_backup.sql | docker exec -i <name-of-docker-container-for-psql> psql -U user books
-```
-
-2. Index the meilisearch data into docker container
-
-Create a new python virtual environment
+Save the books to local database.
 
 ```
-python -m venv venv
-source venv/bin/activate
+psql -U <username> -d books -f postgres_backup.sql
 ```
 
-Download the requirements
+Once all the docker containers have started and the servers (search, db and website-backend) are accepting connections, run the installation script.
 
 ```
-python -m pip install -r search/requirements.txt
-```
-
-Run the script with the `--all` option.
-
-```
-python search/index_data.py -a
+source setup.sh
 ```
 
 # Development instructions

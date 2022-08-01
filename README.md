@@ -61,7 +61,11 @@ Repository is separate into 5 main parts.
 ## 1. Database
 
 The files relating to the database are under the `db` folder.
-A [PostgreSQ](https://www.postgresql.org/) database was used to save the data, and [SQLAlchemy](https://www.sqlalchemy.org/) was used to create the database and tables, as well as save new entries.
+
+Technologies used:
+
+1. [PostgreSQ](https://www.postgresql.org/): Relational Database used to save the data
+2. [SQLAlchemy](https://www.sqlalchemy.org/): Object Relational Mapper (ORM) used to create the database and tables, as well as save new entries
 
 Files:
 

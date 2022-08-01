@@ -104,15 +104,17 @@ Repository is separate into 5 main parts.
 
 The files relating to the database are under the `db` folder.
 
-Technologies used:
-
-1. [PostgreSQ](https://www.postgresql.org/): Relational Database used to save the data
-2. [SQLAlchemy](https://www.sqlalchemy.org/): Object Relational Mapper (ORM) used to create the database and tables, as well as save new entries
+Files in this folder are used in all other parts (Scraper, Data Science, Search, Website) to connect to and communicate with database.
 
 Files:
 
 1. `db_config.py` gets the credentials to connect to the local PostgreSQL database.
 2. `models.py` specifies the database schema using SQLAlchemy and is used by other files to communicate with the database.
+
+Technologies used:
+
+1. [PostgreSQ](https://www.postgresql.org/): Relational Database used to save the data
+2. [SQLAlchemy](https://www.sqlalchemy.org/): Object Relational Mapper (ORM) used to create the database and tables, as well as save new entries
 
 ## 2. Scraper
 

@@ -72,13 +72,17 @@ Files:
 
 The files relating to data science are in the `datascience` folder
 
-Main script is `save_cosine_sim_matrix.py`.
+Main script: `save_cosine_sim_matrix.py`
 
 - Removes stop words and replace remaining words with their stemmed version
 - Converts the cleaned book description of each book into a vector using tf-idf
 - Computes the cosine similarity between the vectors
 - For each book, saves the 10 most similar books to the database.
 - If the option is set, function will output cosine similarity matrix as a numpy pickle into `data` folder.
+
+Local testing: `output_local_cosine_sim.py`
+
+Used to see how well the model predicts similar books. Similar books recommended by the current algorithm is compared with the related books extracted from Gooreads. Comparing related books extracted from Goodreads with the current book should yield a higher similarity score than comparing a random book with the current book. Results are dumped out into a json file in the `data` folder.
 
 ## 4. Search
 

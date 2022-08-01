@@ -96,7 +96,7 @@ Repository is separate into 5 main parts.
 
 1. Database
 2. Scraper
-3. Datascience
+3. Data Science
 4. Search
 5. Website
 
@@ -166,7 +166,7 @@ def start_requests(self):
             # yield scrapy.Request(url=url, callback=self.parse_book_metadata)
 ```
 
-## 3. Datascience
+## 3. Data Science
 
 The files relating to data science are in the `datascience` folder.
 

@@ -68,6 +68,18 @@ Files:
 1. `db_config.py` gets the credentials to connect to the local PostgreSQL database.
 2. `models.py` specifies the database schema using SQLAlchemy and is used by other files to communicate with the database.
 
+## 3. Datascience
+
+The files relating to data science are in the `datascience` folder
+
+Main script is `save_cosine_sim_matrix.py`.
+
+- Removes stop words and replace remaining words with their stemmed version
+- Converts the cleaned book description of each book into a vector using tf-idf
+- Computes the cosine similarity between the vectors
+- For each book, saves the 10 most similar books to the database.
+- If the option is set, function will output cosine similarity matrix as a numpy pickle into `data` folder.
+
 ## 4. Search
 
 Search functionality was implemented using [meilisearch](https://docs.meilisearch.com/). When the meilisearch server is running, the `index_data.py` script is used to index the data from database into the search engine.

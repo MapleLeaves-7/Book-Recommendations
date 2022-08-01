@@ -114,6 +114,56 @@ Files:
 1. `db_config.py` gets the credentials to connect to the local PostgreSQL database.
 2. `models.py` specifies the database schema using SQLAlchemy and is used by other files to communicate with the database.
 
+## 2. Scraper
+
+The files relating to the web scraper are under the `books_scraper` folder.
+
+This web scraper was built using the [Scrapy](https://docs.scrapy.org/en/latest/index.html) framework, and is used to scrape the [Goodreads](https://www.goodreads.com/) website.
+
+The following metadata for each book is saved:
+
+1. Link to goodreads page
+2. Title
+3. Authors
+4. Description
+5. Number of Pages
+6. Number of Ratings
+7. Date Published
+8. Link to Book Cover
+9. Language
+10. Genres
+11. Setting (place at which events in the book took place)
+12. Related Books
+
+This scraper has been run and has extracted the metadata of the books from the list ["Books That Everyone Should Read At Least Once"](https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?"). The related books for each book have been saved into the database, and the metadata for some of them have been crawled. Currently, if the script is run, it will get the book links from the database that have not been crawled, and will crawl them.
+
+To run the books scraper (assuming you are in root directory):
+
+```
+cd books_scraper
+scrapy crawl goodreads
+```
+
+To crawl other book lists on goodreads, modify the code in `spiders/goodreads.py` to the following.
+
+```
+def start_requests(self):
+        # Replace links with links of Goodreads list(s) you want to crawl
+        start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?", "https://www.goodreads.com/list/show/147668.E_J_Koh_s_Books_to_Celebrate_Asian_American_Fiction_Non_Fiction_Memoir_Graphic_Novel_and_Poetry"]
+
+        ## Comment out the following lines
+        # start_urls = []
+        # start_urls += self.get_db_links_recrawl_description()
+        # start_urls += self.get_db_links_no_description()
+        # start_urls += self.get_db_links()
+
+        ## Crawl book list instead of individual book page
+        for url in start_urls:
+            yield scrapy.Request(url=url, callback=self.parse_list)
+            time.sleep(1)
+            # yield scrapy.Request(url=url, callback=self.parse_book_metadata)
+```
+
 ## 3. Datascience
 
 The files relating to data science are in the `datascience` folder.

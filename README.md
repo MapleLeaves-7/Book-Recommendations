@@ -50,6 +50,24 @@ python search/index_data.py -a
 
 # Development instructions
 
+Repository is separate into 5 main parts.
+
+1. Database
+2. Scraper
+3. Datascience
+4. Search
+5. Website
+
+## 1. Database
+
+The files relating to the database are under the `db` folder.
+A [PostgreSQ](https://www.postgresql.org/) database was used to save the data, and [SQLAlchemy](https://www.sqlalchemy.org/) was used to create the database and tables, as well as save new entries.
+
+Files:
+
+1. `db_config.py` gets the credentials to connect to the local PostgreSQL database.
+2. `models.py` specifies the database schema using SQLAlchemy and is used by other files to communicate with the database.
+
 ### Transferring SQL Data
 
 When restoring books.dump into TablePlus database, set it as (--clean and --create)

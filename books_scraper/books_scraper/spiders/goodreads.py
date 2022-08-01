@@ -42,9 +42,7 @@ class GoodreadsSpider(scrapy.Spider):
         self.Session = sessionmaker(bind=engine)
 
     def start_requests(self):
-        # start_urls = ["https://www.goodreads.com/shelf/show/thriller"]
         # start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?"]
-        # start_urls = ["https://www.goodreads.com/list/show/264.Books_That_Everyone_Should_Read_At_Least_Once?page=40"]
 
         start_urls = []
         start_urls += self.get_db_links_recrawl_description()
@@ -102,13 +100,6 @@ class GoodreadsSpider(scrapy.Spider):
         for link in book_links:
             time.sleep(2)
             yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
-
-        # i = 0
-        # for link in book_links:
-        #     if i > 2:
-        #         break
-        #     yield scrapy.Request(url=response.urljoin(link), callback=self.parse_book_metadata)
-        #     i += 1
 
         next_page_disabled = response.xpath('//span[@class="next_page disabled"]')
         if not next_page_disabled:
@@ -186,7 +177,6 @@ class GoodreadsSpider(scrapy.Spider):
             loader.add_xpath('language', '//div[@itemprop="inLanguage"]//text()')
             loader.add_value('genres', self.get_genres(page_sel, response.request.url))
             loader.add_value('settings', self.get_settings(page_sel, response.request.url))
-            # loader.add_xpath('related_book_links', '//h2[contains(text(),"also enjoyed")]/../..//a[contains(@href,"book/show/")]/@href')
             loader.add_value('related_book_links', related_book_links)
 
             metadata_item = loader.load_item()
@@ -201,12 +191,6 @@ class GoodreadsSpider(scrapy.Spider):
 
             metadata_item = loader.load_item()
             yield metadata_item
-
-        # print(related_book_links)
-        # for link in related_book_links:
-        #     if link:
-        #         time.sleep(2)
-        #         yield response.follow(response.urljoin(link), callback=self.parse_book_metadata)
 
     # Check if modal window exists and reload until it is gone
     def remove_old_modal(self, page_sel, url):

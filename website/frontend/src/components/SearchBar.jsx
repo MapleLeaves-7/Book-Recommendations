@@ -152,7 +152,7 @@ export function SearchBar({ isMainPage }) {
   let baseSearchInputClass =
     'relative z-20 w-full px-3 py-1 rounded-lg font-arvo shadow-search focus-visible:shadow-none focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]';
   let baseButtonClass =
-    'w-32 py-1 text-white rounded-md shadow-button bg-green-primary';
+    'w-32 py-1 text-white rounded-md shadow-button bg-green-primary hover:bg-green-secondary';
 
   return (
     <form

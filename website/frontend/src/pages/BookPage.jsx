@@ -32,11 +32,20 @@ export function BookPage() {
         <div className="container-xl">
           {/* Section for all book metadata */}
           <div className="flex pt-2 pb-12 font-titillium">
-            <img
-              src={currentBook.book_cover}
-              alt={currentBook.title}
-              className="rounded-sm shadow-lg w-60 h-80"
-            />
+            {currentBook.book_cover === 'None' ? (
+              <div className="flex flex-col items-center flex-shrink-0 rounded-sm shadow-lg w-52 h-80">
+                <p className="pb-8">(No Book Cover)</p>
+                <p className="text-lg text-center">
+                  Title: {currentBook.title}
+                </p>
+              </div>
+            ) : (
+              <img
+                src={currentBook.book_cover}
+                alt={currentBook.title}
+                className="rounded-sm shadow-lg w-60 h-80"
+              />
+            )}
             {/* Section for book text metadata */}
             <div className="pl-10">
               <h1 className="text-3xl font-bold">{currentBook.title}</h1>

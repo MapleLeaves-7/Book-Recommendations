@@ -102,7 +102,7 @@ export function SearchBar() {
                     <img
                       src={result.book_cover}
                       alt={result.title}
-                      className="w-24 h-36"
+                      className="w-24 h-40"
                     />
                     <span className="flex-wrap">{result.title}</span>
                   </Link>

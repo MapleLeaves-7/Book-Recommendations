@@ -149,6 +149,10 @@ export function SearchBar({ isMainPage }) {
   };
 
   let baseSearchFormClass = 'flex flex-col items-center w-full gap-4';
+  let baseSearchInputClass =
+    'relative z-20 w-full px-3 py-1 rounded-lg font-arvo shadow-search focus-visible:shadow-none focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]';
+  let baseButtonClass =
+    'w-32 py-1 text-white rounded-md shadow-button bg-green-primary';
 
   return (
     <form
@@ -156,7 +160,7 @@ export function SearchBar({ isMainPage }) {
       className={
         isMainPage
           ? baseSearchFormClass
-          : baseSearchFormClass + ' mb-8 md:flex-row'
+          : baseSearchFormClass + ' gap-0 mb-8 md:flex-row'
       }
     >
       <div className="relative w-10/12">
@@ -168,13 +172,22 @@ export function SearchBar({ isMainPage }) {
           onFocus={handleSearchChange}
           onBlur={handleBlur}
           onKeyDown={onKeyDown}
-          className="relative z-20 w-full px-3 py-1 rounded-lg font-arvo shadow-search focus-visible:shadow-none focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2"
+          className={
+            isMainPage
+              ? baseSearchInputClass
+              : baseSearchInputClass +
+                '  outline outline-gray-300 outline-2 outline-r-none outline-offset-[-2px] rounded-r-none shadow-none'
+          }
         />
         {renderAutocomplete()}
       </div>
       <button
         type="submit"
-        className="w-32 py-1 text-white rounded-md shadow-button bg-green-primary"
+        className={
+          isMainPage
+            ? baseButtonClass
+            : baseButtonClass + ' rounded-l-none shadow-none'
+        }
       >
         Search
       </button>

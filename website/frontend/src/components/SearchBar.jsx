@@ -85,14 +85,14 @@ export function SearchBar({ isMainPage }) {
 
   const renderAutocomplete = () => {
     let showAllClassName =
-      'border-gray-300 border-b-[2px] border-l-[2px] border-r-[2px] cursor-pointer';
+      'border-gray-300 border-b-[2px] border-l-[2px] border-r-[2px] cursor-pointer hover:bg-gray-200';
     let activeClass = ' bg-gray-200';
     if (isShow && searchedWord) {
       if (results.length > 0) {
         return (
           <ul className="absolute top-0 z-10 w-full pt-2 font-arvo bg-off-white">
             {results.map((result, index) => {
-              let resultClassName = 'flex gap-5';
+              let resultClassName = 'flex gap-5 hover:bg-gray-200';
               if (index === 0) {
                 resultClassName += ' pt-8';
               }

@@ -4,7 +4,7 @@ export function Main() {
     <div className="flex justify-center">
       <div className="flex flex-col items-center w-screen gap-3 font-arvo container-lg">
         <h1 className="text-xl font-bold ">Find books similar to...</h1>
-        <SearchBar />
+        <SearchBar isMainPage={true} />
       </div>
     </div>
   );

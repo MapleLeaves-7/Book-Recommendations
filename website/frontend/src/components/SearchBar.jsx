@@ -92,7 +92,7 @@ export function SearchBar({ isMainPage }) {
         return (
           <ul className="absolute top-0 z-10 w-full pt-2 font-arvo bg-off-white">
             {results.map((result, index) => {
-              let resultClassName = 'flex gap-5 hover:bg-gray-200';
+              let resultClassName = 'flex gap-3 hover:bg-gray-200';
               if (index === 0) {
                 resultClassName += ' pt-8';
               }

@@ -4,15 +4,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import searchService from '../services/search';
 const { index } = searchService;
 
-export function SearchBar() {
+export function SearchBar({ isMainPage }) {
   const [active, setActive] = useState(null);
   const [results, setResults] = useState([]);
   const [searchedWord, setSearch] = useState('');
   const [hasMoreResults, setHasMoreResults] = useState(false);
+  const [isShow, setIsShow] = useState(false);
 
   const navigate = useNavigate();
 
   const submitSearch = () => {
+    setIsShow(false);
     navigate(`/search`, { state: searchedWord });
   };
 
@@ -67,6 +69,7 @@ export function SearchBar() {
 
   const handleSearchChange = ({ target }) => {
     setSearch(target.value);
+    setIsShow(true);
     (async function () {
       let max_num_results = 5;
       const search = await index.search(target.value);
@@ -83,10 +86,10 @@ export function SearchBar() {
   const renderAutocomplete = () => {
     let showAllClassName = 'cursor-pointer';
     let activeClass = ' bg-gray-200';
-    if (searchedWord) {
+    if (isShow && searchedWord) {
       if (results.length > 0) {
         return (
-          <ul className="absolute w-full bg-off-white">
+          <ul className="absolute w-full font-arvo bg-off-white">
             {results.map((result, index) => {
               let resultClassName = 'flex gap-5';
               return (
@@ -129,10 +132,18 @@ export function SearchBar() {
     }
   };
 
+  let baseSearchFormClass = 'flex flex-col items-center w-full gap-4';
+  let baseSearchBarClass =
+    'w-full font-arvo px-3 py-1 rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2';
+
   return (
     <form
       onSubmit={handleEnter}
-      className="flex flex-col items-center w-full gap-4"
+      className={
+        isMainPage
+          ? baseSearchFormClass
+          : baseSearchFormClass + ' mb-8 md:flex-row'
+      }
     >
       <div className="relative w-10/12">
         <input
@@ -142,11 +153,16 @@ export function SearchBar() {
           onChange={handleSearchChange}
           onFocus={handleSearchChange}
           onKeyDown={onKeyDown}
-          className="w-full search-bar"
+          className={
+            isMainPage ? baseSearchBarClass : baseSearchBarClass + 'md:w-10/12'
+          }
         />
         {renderAutocomplete()}
       </div>
-      <button type="submit" className="search-button">
+      <button
+        type="submit"
+        className="w-32 py-1 text-white rounded-md shadow-button bg-green-primary"
+      >
         Search
       </button>
     </form>

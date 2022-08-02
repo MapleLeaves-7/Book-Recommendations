@@ -12,6 +12,7 @@ module.exports = {
         bg: '#FFFEF5',
         'off-white': '#FEFEFE',
         'green-primary': '#A5A58D',
+        'green-secondary': '#86866A',
       },
       boxShadow: {
         button: '2px 2px 2px rgba(0, 0, 0, 0.1)',

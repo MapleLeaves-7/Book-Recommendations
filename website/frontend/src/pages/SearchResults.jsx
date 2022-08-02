@@ -36,14 +36,14 @@ export function SearchResults() {
         {/* Section for Search Bar */}
         <form
           onSubmit={submitSearch}
-          className="flex items-center w-full gap-4 mb-8"
+          className="flex flex-col items-center w-full gap-4 mb-8 md:flex-row"
         >
           <input
             name="Search"
             type="text"
             value={searchedWord}
             onChange={({ target }) => setSearch(target.value)}
-            className="w-10/12 search-bar"
+            className="w-full md:w-10/12 search-bar"
           />
           <button type="submit" className="search-button">
             Search
@@ -55,6 +55,7 @@ export function SearchResults() {
           title={'Search results'}
           books={searchResults}
           noResultsMessage="Sorry, I could not find the book you were looking for."
+          searchResultsPage={true}
         />
       </div>
     </div>

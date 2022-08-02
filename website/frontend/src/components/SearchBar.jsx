@@ -71,7 +71,7 @@ export function SearchBar({ isMainPage }) {
     setSearch(target.value);
     setIsShow(true);
     (async function () {
-      let max_num_results = 5;
+      let max_num_results = 3;
       const search = await index.search(target.value);
       if (search.hits.length > max_num_results) {
         setResults(search.hits.slice(0, max_num_results));
@@ -84,16 +84,24 @@ export function SearchBar({ isMainPage }) {
   };
 
   const renderAutocomplete = () => {
-    let showAllClassName = 'cursor-pointer';
+    let showAllClassName =
+      'border-gray-300 border-b-[2px] border-l-[2px] border-r-[2px] cursor-pointer';
     let activeClass = ' bg-gray-200';
     if (isShow && searchedWord) {
       if (results.length > 0) {
         return (
-          <ul className="absolute w-full font-arvo bg-off-white">
+          <ul className="absolute top-0 z-10 w-full pt-2 font-arvo bg-off-white">
             {results.map((result, index) => {
               let resultClassName = 'flex gap-5';
+              if (index === 0) {
+                resultClassName += ' pt-8';
+              }
+
               return (
-                <li key={result.id}>
+                <li
+                  key={result.id}
+                  className="border-gray-300 border-b-[2px] border-l-[2px] border-r-[2px]"
+                >
                   <Link
                     to={`/book/${result.id}`}
                     className={
@@ -105,7 +113,7 @@ export function SearchBar({ isMainPage }) {
                     <img
                       src={result.book_cover}
                       alt={result.title}
-                      className="w-24 h-40"
+                      className="w-20 p-1 pr-0 h-28 min-w-20 min-h-28"
                     />
                     <span className="flex-wrap">{result.title}</span>
                   </Link>
@@ -121,7 +129,7 @@ export function SearchBar({ isMainPage }) {
                     : showAllClassName
                 }
               >
-                ...show all results
+                <p className="p-1 pl-4">...show all results</p>
               </li>
             ) : (
               <></>
@@ -133,8 +141,6 @@ export function SearchBar({ isMainPage }) {
   };
 
   let baseSearchFormClass = 'flex flex-col items-center w-full gap-4';
-  let baseSearchBarClass =
-    'w-full font-arvo px-3 py-1 rounded-lg shadow-search focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2';
 
   return (
     <form
@@ -156,9 +162,7 @@ export function SearchBar({ isMainPage }) {
             setIsShow(false);
           }}
           onKeyDown={onKeyDown}
-          className={
-            isMainPage ? baseSearchBarClass : baseSearchBarClass + 'md:w-10/12'
-          }
+          className="relative z-20 w-full px-3 py-1 rounded-lg font-arvo shadow-search focus-visible:shadow-none focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2"
         />
         {renderAutocomplete()}
       </div>

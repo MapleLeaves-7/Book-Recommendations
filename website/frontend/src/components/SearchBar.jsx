@@ -152,6 +152,9 @@ export function SearchBar({ isMainPage }) {
           value={searchedWord}
           onChange={handleSearchChange}
           onFocus={handleSearchChange}
+          onBlur={() => {
+            setIsShow(false);
+          }}
           onKeyDown={onKeyDown}
           className={
             isMainPage ? baseSearchBarClass : baseSearchBarClass + 'md:w-10/12'

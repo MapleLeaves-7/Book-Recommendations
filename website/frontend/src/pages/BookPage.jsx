@@ -27,13 +27,15 @@ export function BookPage() {
   }, [id]);
 
   if (currentBook) {
+    let bookCoverClass =
+      'flex-grow-0 flex-shrink-0 rounded-sm shadow-lg w-52 h-80';
     return (
       <div className="flex justify-center">
         <div className="container-xl">
           {/* Section for all book metadata */}
           <div className="flex pt-2 pb-12 font-titillium">
             {currentBook.book_cover === 'None' ? (
-              <div className="flex flex-col items-center flex-shrink-0 rounded-sm shadow-lg w-52 h-80">
+              <div className={bookCoverClass + ' flex flex-col items-center'}>
                 <p className="pb-8">(No Book Cover)</p>
                 <p className="text-lg text-center">
                   Title: {currentBook.title}
@@ -43,7 +45,7 @@ export function BookPage() {
               <img
                 src={currentBook.book_cover}
                 alt={currentBook.title}
-                className="rounded-sm shadow-lg w-60 h-80"
+                className={bookCoverClass}
               />
             )}
             {/* Section for book text metadata */}

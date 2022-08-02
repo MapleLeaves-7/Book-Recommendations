@@ -55,7 +55,7 @@ export function SearchResults() {
           title={'Search results'}
           books={searchResults}
           noResultsMessage="Sorry, I could not find the book you were looking for."
-          searchResultsPage={true}
+          isSearchResultsPage={true}
         />
       </div>
     </div>

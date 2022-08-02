@@ -4,17 +4,17 @@ export function BookCardResults({
   title,
   books,
   noResultsMessage,
-  searchResultsPage,
+  isSearchResultsPage,
 }) {
   let bookCardClass = 'grid w-full gap-4 justify-items-center grid-cols-fit';
   return (
     <div className="flex flex-col items-center w-full">
-      <h2 className={searchResultsPage ? 'pb-3' : 'pb-3 sm:self-start'}>
+      <h2 className={isSearchResultsPage ? 'pb-3' : 'pb-3 sm:self-start'}>
         {title}
       </h2>
       <div
         className={
-          searchResultsPage
+          isSearchResultsPage
             ? bookCardClass
             : bookCardClass + ' sm:justify-items-start'
         }

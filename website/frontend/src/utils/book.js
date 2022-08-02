@@ -9,11 +9,11 @@ const getAuthorDisplay = authors => {
 
 const getShortDescription = description => {
   let words = description.split(' ');
-  if (words.length < 100) {
+  if (words.length < 60) {
     return description;
   }
 
-  return words.slice(0, 97).join(' ');
+  return words.slice(0, 57).join(' ');
 };
 
 const bookUtils = { getAuthorDisplay, getShortDescription };

@@ -51,8 +51,8 @@ def get_similar_books(book_id):
             if similar_book:
                 # convert sql book object to python dictionary format
                 similar_book_dict = Book.as_dict(similar_book)
-                # convert sql author object to python dictionary format to append to book
-                similar_book_dict["authors"] = [Author.as_dict(author) for author in book.authors]
+                # convert similar book author sqlalchemy object to python dictionary format to append to similar_book
+                similar_book_dict["authors"] = [Author.as_dict(author) for author in similar_book.authors]
                 similar_books.append(similar_book_dict)
     return jsonify(similar_books)
 

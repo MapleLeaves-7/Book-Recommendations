@@ -140,6 +140,14 @@ export function SearchBar({ isMainPage }) {
     }
   };
 
+  const handleBlur = () => {
+    // have small timeout so that suggested book does not disappear when user clicks on it
+    // and user will be redirected to book page instead
+    setTimeout(function () {
+      setIsShow(false);
+    }, 100);
+  };
+
   let baseSearchFormClass = 'flex flex-col items-center w-full gap-4';
 
   return (
@@ -158,9 +166,7 @@ export function SearchBar({ isMainPage }) {
           value={searchedWord}
           onChange={handleSearchChange}
           onFocus={handleSearchChange}
-          onBlur={() => {
-            setIsShow(false);
-          }}
+          onBlur={handleBlur}
           onKeyDown={onKeyDown}
           className="relative z-20 w-full px-3 py-1 rounded-lg font-arvo shadow-search focus-visible:shadow-none focus-visible:outline-green-primary focus-visible:outline focus-visible:outline-2"
         />

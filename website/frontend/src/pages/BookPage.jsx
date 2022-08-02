@@ -33,7 +33,7 @@ export function BookPage() {
       <div className="flex justify-center">
         <div className="container-xl">
           {/* Section for all book metadata */}
-          <div className="flex pt-2 pb-12 font-titillium">
+          <div className="flex flex-col items-center pt-2 pb-12 md:flex-row md:items-start font-titillium">
             {currentBook.book_cover === 'None' ? (
               <div className={bookCoverClass + ' flex flex-col items-center'}>
                 <p className="pb-8">(No Book Cover)</p>
@@ -49,7 +49,7 @@ export function BookPage() {
               />
             )}
             {/* Section for book text metadata */}
-            <div className="pl-10">
+            <div className="pt-10 md:pl-10 md:pt-0">
               <h1 className="text-3xl font-bold">{currentBook.title}</h1>
               <p className="mb-3 text-lg">
                 by{' '}

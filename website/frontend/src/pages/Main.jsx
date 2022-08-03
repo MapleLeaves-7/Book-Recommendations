@@ -29,7 +29,7 @@ export function Main() {
         {/* Section to show off similar books */}
         <div className="w-10/12 mt-6">
           <h2 className="pb-3">For example:</h2>
-          <div className="box-border flex justify-between px-10 pt-5 pb-8 overflow-x-scroll rounded-md bg-light-orange">
+          <div className="box-border flex flex-col items-center justify-between px-10 pt-5 pb-8 rounded-md sm:flex-row sm:overflow-x-scroll bg-light-orange">
             {/* Section for current book */}
             <div>
               <h3 className="pb-2 text-lg">This book...</h3>
@@ -43,11 +43,11 @@ export function Main() {
               )}
             </div>
 
-            <RightArrowLogo className="flex-shrink-0 w-20 px-2 opacity-70" />
+            <RightArrowLogo className="flex-shrink-0 w-20 py-3 rotate-90 sm:py-0 sm:px-2 opacity-70 sm:rotate-0" />
             {/* Section for similar books */}
             <div>
               <h3 className="pb-2 text-lg">...is similar to these</h3>
-              <div className="flex justify-center gap-5">
+              <div className="flex flex-col justify-center gap-5 sm:flex-row">
                 {similarBooks.length > 0
                   ? similarBooks.map(book => {
                       console.log(book);

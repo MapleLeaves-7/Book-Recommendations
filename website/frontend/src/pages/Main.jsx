@@ -29,7 +29,7 @@ export function Main() {
         {/* Section to show off similar books */}
         <div className="w-10/12 mt-6">
           <h2 className="pb-3">For example:</h2>
-          <div className="flex justify-between px-10 pt-5 pb-8 rounded-md bg-light-orange">
+          <div className="box-border flex justify-between px-10 pt-5 pb-8 overflow-x-scroll rounded-md bg-light-orange">
             {/* Section for current book */}
             <div>
               <h3 className="pb-2 text-lg">This book...</h3>
@@ -43,7 +43,7 @@ export function Main() {
               )}
             </div>
 
-            <RightArrowLogo className="w-20 opacity-70" />
+            <RightArrowLogo className="flex-shrink-0 w-20 px-2 opacity-70" />
             {/* Section for similar books */}
             <div>
               <h3 className="pb-2 text-lg">...is similar to these</h3>

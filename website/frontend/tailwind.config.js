@@ -13,6 +13,7 @@ module.exports = {
         'off-white': '#FEFEFE',
         'green-primary': '#A5A58D',
         'green-secondary': '#86866A',
+        'light-orange': '#FFE4CF',
       },
       boxShadow: {
         button: '2px 2px 2px rgba(0, 0, 0, 0.1)',

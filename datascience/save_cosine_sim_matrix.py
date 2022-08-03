@@ -142,7 +142,10 @@ def save_similar_books(save_all=False, num_books=100, file_name=None, output_mat
         cosine_sim_matrix = get_cosine_sim_matrix(get_all=save_all, num_books=num_books)
         if output_matrix:
             print("outputting numpy matrix...")
-            np.save('./data/cosine_sim_matrix', cosine_sim_matrix)
+            if save_all:
+                np.save('../large_files/all_cosine_sim_matrix', cosine_sim_matrix)
+            else:
+                np.save('./data/cosine_sim_matrix', cosine_sim_matrix)
 
     print("saving similar books into database...")
     print(f"there are {len(cosine_sim_matrix)} books to save")

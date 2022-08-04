@@ -3,6 +3,50 @@
 ![architecture
 diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/architecture.svg?raw=true)
 
+# About
+
+This end product of this project is a book recommendations website. After finishing a book they thoroughly enjoyed, people normally want to find other books similar to it. This is what this website aims to do.
+
+There are 3 parts to this project.
+
+1. Data Collection
+2. Data Analysis
+3. User End Product (Website)
+
+235,895 book links and the metadata of 47,414 books were crawled from the website [Goodreads](https://www.goodreads.com/). This data was then analyzed to get the most similar books to each book. And the website was built based on that data.
+
+For more information on how this project was built and the contents of this repository, please refer to [Repository Structure and Contents](#repository-structure-and-contents) below.
+
+## Tech Stack
+
+### Client
+
+1. Javascript
+2. HTML
+3. CSS
+4. [React](https://reactjs.org/)
+5. [TailwindCSS](https://tailwindcss.com/)
+
+### Server
+
+1. Python
+2. [Flask](https://flask.palletsprojects.com/en/2.2.x/quickstart/)
+3. [PostgreSQL](https://www.postgresql.org/)
+4. [SQLAlchemy](https://www.sqlalchemy.org/)
+5. [Meilisearch](https://docs.meilisearch.com/)
+
+### Web Scraper
+
+1. Python
+2. [Scrapy](https://scrapy.org/)
+3. [Selenium with Python](https://selenium-python.readthedocs.io/)
+4. [Web Driver Manager](https://github.com/bonigarcia/webdrivermanager)
+
+### Development
+
+1. Bash
+2. [Docker](https://www.docker.com/)
+
 # Deployment instructions
 
 Requirements:

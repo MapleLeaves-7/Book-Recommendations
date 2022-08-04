@@ -71,7 +71,7 @@ docker-compose up
 docker-compose down
 ```
 
-## Intial Setup (on a new machine)
+## Initial Setup (on a new machine)
 
 This step only needs to be done once on a new machine.
 

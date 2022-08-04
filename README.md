@@ -47,13 +47,15 @@ For more information on how this project was built and the contents of this repo
 1. Bash
 2. [Docker](https://www.docker.com/)
 
-# Deployment instructions
+# Development instructions
 
-Requirements:
+## Prerequisites
 
-1. Docker
-2. Python 3.9
-3. PostgreSQL 13
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [Python](https://www.python.org/downloads/) 3.9
+3. [PostgreSQL](https://www.postgresql.org/download/) 13
+
+If you don't know how to use docker, please refer [here](#development-instructions-without-docker) to setup the application without it.
 
 ## Starting the website
 
@@ -85,7 +87,10 @@ Once all the docker containers have started and the servers (search, db and webs
 source setup.sh
 ```
 
-# Development instructions
+# Development instructions (without Docker)
+
+<details>
+<summary>Click to see how to setup the application locally without Docker</summary>
 
 ## Requirements
 
@@ -173,6 +178,8 @@ meilisearch --no-analytics
 cd website/frontend
 npm start
 ```
+
+</details>
 
 # Repository Structure and Contents
 

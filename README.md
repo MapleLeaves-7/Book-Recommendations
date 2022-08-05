@@ -297,6 +297,11 @@ Example usage:
 python search/index_data.py --all -b 1000
 ```
 
+```
+# Indexes 2000 books into the search engine, 500 books at a time.
+python search/index_data.py -n 2000 -b 500
+```
+
 ### Local testing: `output_local.py`
 
 Indexes the data with default arguments into the search engine and outputs the indexed data as a json file.

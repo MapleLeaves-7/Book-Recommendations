@@ -119,12 +119,12 @@ Once all the docker containers have started and the servers (search, db and webs
 source setup.sh
 ```
 
-# Development instructions (without Docker)
+## Development instructions (without Docker)
 
 <details>
 <summary>Click to see how to setup the application locally without Docker</summary>
 
-## Requirements
+## Prerequisites
 
 1. [Python](https://www.python.org/downloads/) 3.9 and above
 2. [Node.js](https://nodejs.org/en/download/) v16 and above

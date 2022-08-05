@@ -5,7 +5,7 @@ diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/ar
 
 # About
 
-This end product of this project is a book recommendations website. After finishing a book they thoroughly enjoyed, people normally want to find other books similar to it. This is what this website aims to do.
+This end product of this project is a book recommendations website. After finishing a book they thoroughly enjoyed, people normally want to find other books similar to it. This is what this website aims to provide.
 
 There are 3 parts to this project.
 

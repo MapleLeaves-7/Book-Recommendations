@@ -1,8 +1,5 @@
 # Book-Recommendations
 
-![architecture
-diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/architecture.svg?raw=true)
-
 # About
 
 This end product of this project is a book recommendations website. After finishing a book they thoroughly enjoyed, people normally want to find other books similar to it. This is what this website aims to provide.
@@ -14,6 +11,10 @@ There are 3 parts to this project.
 3. User End Product (Website)
 
 235,895 book links and the metadata of 47,414 books were crawled from the website [Goodreads](https://www.goodreads.com/). This data was then analyzed to get the most similar books to each book. And the website was built based on that data.
+
+## Architecture Diagram
+
+![architecture diagram](docs/architecture_diagram.svg)
 
 For more information on how this project was built and the contents of this repository, please refer to [Repository Structure and Contents](#repository-structure-and-contents) below.
 

@@ -10,7 +10,7 @@ There are 3 parts to this project.
 2. Data Analysis
 3. User End Product (Website)
 
-235,895 book links and the metadata of 47,414 books were crawled from the website [Goodreads](https://www.goodreads.com/). This data was then analyzed to get the most similar books to each book. And the website was built based on that data.
+235,895 book links and the metadata of 47,414 books were crawled from the website [Goodreads](https://www.goodreads.com/). This data was analyzed to get the books most similar to each book, and the website was built based on that analysis.
 
 ## Architecture Diagram
 

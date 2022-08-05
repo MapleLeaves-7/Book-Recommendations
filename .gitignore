@@ -15,3 +15,5 @@ data.ms/
 # ignore docker mounted volumes
 **pgdata/
 **meili_data/
+
+.DS_Store

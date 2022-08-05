@@ -3,13 +3,59 @@
 ![architecture
 diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/architecture.svg?raw=true)
 
-# Deployment instructions
+# About
 
-Requirements:
+This end product of this project is a book recommendations website. After finishing a book they thoroughly enjoyed, people normally want to find other books similar to it. This is what this website aims to do.
 
-1. Docker
-2. Python 3.9
-3. PostgreSQL 13
+There are 3 parts to this project.
+
+1. Data Collection
+2. Data Analysis
+3. User End Product (Website)
+
+235,895 book links and the metadata of 47,414 books were crawled from the website [Goodreads](https://www.goodreads.com/). This data was then analyzed to get the most similar books to each book. And the website was built based on that data.
+
+For more information on how this project was built and the contents of this repository, please refer to [Repository Structure and Contents](#repository-structure-and-contents) below.
+
+## Tech Stack
+
+### Client
+
+1. Javascript
+2. HTML
+3. CSS
+4. [React](https://reactjs.org/)
+5. [TailwindCSS](https://tailwindcss.com/)
+
+### Server
+
+1. Python
+2. [Flask](https://flask.palletsprojects.com/en/2.2.x/quickstart/)
+3. [PostgreSQL](https://www.postgresql.org/)
+4. [SQLAlchemy](https://www.sqlalchemy.org/)
+5. [Meilisearch](https://docs.meilisearch.com/)
+
+### Web Scraper
+
+1. Python
+2. [Scrapy](https://scrapy.org/)
+3. [Selenium with Python](https://selenium-python.readthedocs.io/)
+4. [Web Driver Manager](https://github.com/bonigarcia/webdrivermanager)
+
+### Development
+
+1. Bash
+2. [Docker](https://www.docker.com/)
+
+# Development instructions
+
+## Prerequisites
+
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [Python](https://www.python.org/downloads/) 3.9
+3. [PostgreSQL](https://www.postgresql.org/download/) 13
+
+If you don't know how to use docker, please refer [here](#development-instructions-without-docker) to setup the application without it.
 
 ## Starting the website
 
@@ -25,7 +71,7 @@ docker-compose up
 docker-compose down
 ```
 
-## Intial Setup (on a new machine)
+## Initial Setup (on a new machine)
 
 This step only needs to be done once on a new machine.
 
@@ -41,7 +87,10 @@ Once all the docker containers have started and the servers (search, db and webs
 source setup.sh
 ```
 
-# Development instructions
+# Development instructions (without Docker)
+
+<details>
+<summary>Click to see how to setup the application locally without Docker</summary>
 
 ## Requirements
 
@@ -129,6 +178,8 @@ meilisearch --no-analytics
 cd website/frontend
 npm start
 ```
+
+</details>
 
 # Repository Structure and Contents
 
@@ -244,6 +295,11 @@ Example usage:
 ```
 # Indexes all the books into the search engine, 1000 books at a time.
 python search/index_data.py --all -b 1000
+```
+
+```
+# Indexes 2000 books into the search engine, 500 books at a time.
+python search/index_data.py -n 2000 -b 500
 ```
 
 ### Local testing: `output_local.py`

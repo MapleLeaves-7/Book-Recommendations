@@ -47,6 +47,38 @@ For more information on how this project was built and the contents of this repo
 1. Bash
 2. [Docker](https://www.docker.com/)
 
+# Website
+
+Features:
+
+- Consistent Color Scheme
+- [Responsive Design](#responsive-design)
+- [Autosuggestions](#autosuggestions)
+
+## Usage
+
+1. This is the home page. Enter the name or author of the book you are searching for into the search bar. If the book you are searching for shows up as one of the options, use the arrow keys to navigate to corresponding suggested option and hit enter. You may also click on the suggestion with your mouse. You will be brought to the individual book page.
+
+![homepage search](docs/homepage_search.gif)
+
+2. If the book you are searching for is not one of the suggested options, hit enter without selecting any option and you will be brought to the search results page. You may also use your arrow keys to navigate to or click on the 'show all...' option. You will be brought to the Search Results page, where all the books that have matched you search will be shown. Click on the book you are searching for.
+
+![search results](docs/search_results_page.gif)
+
+3. This is the page for each book. Scroll down to the bottom to view the similar books. If a similar book catches your eye, click on the book card and you will be brought to that book's page.
+
+![individual book page](docs/individual_book_page.gif)
+
+## Responsive Design
+
+Responsive design was implemented for all of the pages.
+
+![responsive design](docs/responsive_design.gif)
+
+## Autosuggestions
+
+![autosuggestions](docs/autosuggestion.gif)
+
 # Development instructions
 
 ## Prerequisites

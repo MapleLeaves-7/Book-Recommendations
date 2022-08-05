@@ -27,6 +27,7 @@ def get_processed_books(num_books=3000, get_all=False):
     """
     all_books = []
     with Session.begin() as session:
+        print("retrieving books from database...")
         # get books which either have all data, or have title, description and author
         if get_all:
             books = session.query(Book).filter(
@@ -45,7 +46,7 @@ def get_processed_books(num_books=3000, get_all=False):
             # convert sql author object to python dictionary format to append to book
             book_dict["authors"] = [Author.as_dict(author) for author in book.authors]
             all_books.append(book_dict)
-
+    print(f"{len(all_books)} retrieved from database")
     return all_books
 
 
@@ -59,6 +60,7 @@ def index_data(index_all=False, num_books=500, batch_num=500):
     all_books = get_processed_books(num_books=num_books, get_all=index_all)
     i = 0
     while i < len(all_books):
+        print(f"indexing books {i} to {min(i+batch_num, len(all_books))}...")
         client.index("books").add_documents(all_books[i:i+batch_num])
         i += batch_num
 

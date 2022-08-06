@@ -112,9 +112,7 @@ docker-compose down
 
 The following steps only need to be done once on a new machine.
 
-1. Download the PostgreSQL backup file called `books_psql_backup_all.sql` under the directory `large_files/` from the github repository.
-2. Create a new folder called `large_files` in the root of your cloned repository and save `books_psql_backup_all.sql` under the `large_files` folder.
-3. Create a new database called "books"
+1. Create a new database called "books"
 
 ```
 >> psql
@@ -124,19 +122,19 @@ yourusername=# \q;
 
 ```
 
-4. Save the PostgreSQL backup into the books database you just created.
+2. Save the PostgreSQL backup into the books database you just created.
 
 ```
 >> psql -U <username> -d books -f large_files/books_psql_backup_all.sql
 ```
 
-5. Start the docker containers.
+3. Start the docker containers.
 
 ```
 docker-compose up
 ```
 
-6. Once all the docker containers have started and the servers (search, db and website-backend) are accepting connections, run the installation script.
+4. Once all the docker containers have started and the servers (search, db and website-backend) are accepting connections, run the installation script.
 
 ```
 source setup.sh

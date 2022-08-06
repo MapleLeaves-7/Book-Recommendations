@@ -106,15 +106,33 @@ docker-compose down
 
 ## Initial Setup (on a new machine)
 
-This step only needs to be done once on a new machine.
+The following steps only need to be done once on a new machine.
 
-Save the books to local database.
+1. Download the PostgreSQL backup file called `books_psql_backup_all.sql` under the directory `large_files/` from the github repository.
+2. Create a new folder called `large_files` in the root of your cloned repository and save `books_psql_backup_all.sql` under the `large_files` folder.
+3. Create a new database called "books"
 
 ```
-psql -U <username> -d books -f postgres_backup.sql
+>> psql
+yourusername=# CREATE DATABASE books;
+CREATE DATABASE
+yourusername=# \q;
+
 ```
 
-Once all the docker containers have started and the servers (search, db and website-backend) are accepting connections, run the installation script.
+4. Save the PostgreSQL backup into the books database you just created.
+
+```
+>> psql -U <username> -d books -f large_files/books_psql_backup_all.sql
+```
+
+5. Start the docker containers.
+
+```
+docker-compose up
+```
+
+6. Once all the docker containers have started and the servers (search, db and website-backend) are accepting connections, run the installation script.
 
 ```
 source setup.sh
@@ -149,12 +167,12 @@ npm install
 
 ## Restoring SQL Data
 
-Database sql dump is saved under `postgres_backup.sql` in root directory.
+Database sql dump is saved under `large_files/books_psql_backup_all.sql`.
 
 To restore books data into database:
 
 ```
-psql -U <username> -d books < postgres_backup.sql
+psql -U <username> -d books < large_files/books_psql_backup_all.sql
 ```
 
 ## Index data into search engine

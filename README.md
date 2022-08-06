@@ -14,7 +14,7 @@ There are 3 parts to this project.
 
 ## Architecture Diagram
 
-![architecture diagram](docs/architecture_diagram.svg)
+![architecture diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/architecture_diagram.svg?raw=true)
 
 For more information on how this project was built and the contents of this repository, please refer to [Repository Structure and Contents](#repository-structure-and-contents) below.
 
@@ -60,25 +60,25 @@ Features:
 
 1. This is the home page. Enter the name or author of the book you are searching for into the search bar. If the book you are searching for shows up as one of the options, use the arrow keys to navigate to corresponding suggested option and hit enter. You may also click on the suggestion with your mouse. You will be brought to the individual book page.
 
-![homepage search](docs/homepage_search.gif)
+![homepage search](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/homepage_search.gif?raw=true)
 
 2. If the book you are searching for is not one of the suggested options, hit enter without selecting any option and you will be brought to the search results page. You may also use your arrow keys to navigate to or click on the 'show all...' option. You will be brought to the Search Results page, where all the books that have matched you search will be shown. Click on the book you are searching for.
 
-![search results](docs/search_results_page.gif)
+![search results](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/search_results_page.gif?raw=true)
 
 3. This is the page for each book. Scroll down to the bottom to view the similar books. If a similar book catches your eye, click on the book card and you will be brought to that book's page.
 
-![individual book page](docs/individual_book_page.gif)
+![individual book page](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/individual_book_page.gif?raw=true)
 
 ## Responsive Design
 
 Responsive design was implemented for all of the pages.
 
-![responsive design](docs/responsive_design.gif)
+![responsive design](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/responsive_design.gif?raw=true)
 
 ## Autosuggestions
 
-![autosuggestions](docs/autosuggestion.gif)
+![autosuggestions](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/autosuggestion.gif?raw=true)
 
 # Development instructions
 

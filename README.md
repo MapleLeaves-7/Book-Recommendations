@@ -14,10 +14,6 @@ There are 3 parts to this project.
 
 ## Architecture Diagram
 
-![architecture diagram](https://github.com/MapleLeaves-7/Book-Recommendations/blob/main/docs/architecture_diagram.svg?raw=true)
-
-## Architecture Diagram
-
 ![architecture diagram](docs/architecture_diagram.svg)
 
 For more information on how this project was built and the contents of this repository, please refer to [Repository Structure and Contents](#repository-structure-and-contents) below.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-docker exec -i book-recommendations_db_1 psql -U user books < postgres_backup.sql
+docker exec -i book-recommendations_db_1 psql -U user books < large_files/books_psql_backup_all.sql
 
 python -m venv setup_venv
 source setup_venv/bin/activate

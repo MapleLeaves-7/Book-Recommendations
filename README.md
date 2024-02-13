@@ -232,7 +232,7 @@ npm start
 
 # Repository Structure and Contents
 
-Repository is separate into 5 main parts.
+Repository is separated into 5 main parts.
 
 1. Database
 2. Scraper

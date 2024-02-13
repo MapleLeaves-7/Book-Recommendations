@@ -260,7 +260,7 @@ Technologies used:
 
 The files relating to the web scraper are under the `books_scraper` folder.
 
-This web scraper was built using the [Scrapy](https://docs.scrapy.org/en/latest/index.html) framework, and is used to scrape the [Goodreads](https://www.goodreads.com/) website.
+This web scraper was built using [Scrapy](https://docs.scrapy.org/en/latest/index.html) and [Selenium](https://www.selenium.dev/), and is used to scrape the [Goodreads](https://www.goodreads.com/) website.
 
 The following metadata for each book is saved:
 
